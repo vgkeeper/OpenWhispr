@@ -777,7 +777,7 @@ class MainActivity : AppCompatActivity() {
     private fun promptApiKey() {
         val link = TextView(this).apply {
             text = android.text.Html.fromHtml(
-                "Don't have one? Get a free key at <a href=\"https://console.groq.com/keys\">console.groq.com/keys</a>",
+                getString(R.string.api_key_help_html),
                 android.text.Html.FROM_HTML_MODE_LEGACY
             )
             movementMethod = android.text.method.LinkMovementMethod.getInstance()
@@ -870,7 +870,7 @@ class MainActivity : AppCompatActivity() {
                 try {
                     nextConfig.chatCompletionsUrl()
                 } catch (e: IllegalArgumentException) {
-                    toast(e.message ?: getString(R.string.invalid_cleanup_url))
+                    toast(getString(R.string.invalid_cleanup_url))
                     return@setOnClickListener
                 }
                 prefs().edit()
