@@ -25,7 +25,6 @@
     <string name="cloud_transcription">Utiliser la transcription dans le cloud</string>
     <string name="requires_groq_key">Nécessite une clé API Groq</string>
     <string name="post_processing">Post-traitement</string>
-    <string name="cleanup_transcript">Améliorer la transcription</string>
     <string name="voice_commands">Commandes vocales</string>
     <string name="custom_dictionary">Dictionnaire personnalisé</string>
     <string name="bubble_size">Taille de la bulle</string>
@@ -48,7 +47,7 @@
     <string name="dictionary_no_text">Aucun texte sélectionné à ajouter</string>
     <string name="dictionary_saved">Dictionnaire enregistré</string>
     <string name="setup">Configuration</string><string name="engine">Moteur</string><string name="accessibility_help">Permet de détecter le champ de texte actif et d’y insérer le texte corrigé.</string>
-    <string name="cleanup_provider">Fournisseur de correction</string><string name="add_custom_instructions">Ajouter des consignes personnalisées</string><string name="tap_add_refinements">Touchez pour ajouter des consignes</string>
+    <string name="cleanup_provider">Service de correction</string><string name="add_custom_instructions">Ajouter des consignes personnalisées</string><string name="tap_add_refinements">Touchez pour ajouter des consignes</string>
     <string name="trigger_phrase">Phrase de déclenchement</string><string name="tap_to_change">Touchez pour modifier</string><string name="see_what_you_can_say">Voir les exemples de commandes</string>
     <string name="add_dictionary_words">Ajouter des mots à la transcription</string><string name="groq_api_key">Clé API Groq</string><string name="tap_to_set">Touchez pour configurer</string>
     <string name="floating_bubble">Bulle de dictée flottante</string><string name="github">GitHub</string><string name="view_source_releases">Voir le code source et les versions</string>
@@ -60,7 +59,7 @@
     <string name="downloading_update">Téléchargement de la mise à jour…</string><string name="download_failed">Échec du téléchargement de la mise à jour. Veuillez réessayer.</string><string name="installer_failed">Impossible de lancer l’installation. Essayez d’ouvrir manuellement le fichier APK téléchargé.</string>
     <string name="keep_dictation_running">Maintenir la dictée active</string><string name="dictionary_hint">Un mot ou une expression par ligne</string>
     <string name="dictionary_help">Enregistré sur cet appareil. Le renforcement des mots-clés fonctionne avec les modèles sherpa-onnx transducer ; la correction cloud utilise ces mots comme références orthographiques.</string>
-    <string name="api_key_hint">Clé API (stockée de façon chiffrée)</string><string name="cleanup_provider_help">Choisissez l’API de chat utilisée uniquement pour corriger la transcription. La reconnaissance vocale cloud reste assurée par Groq Whisper Large V3 Turbo.</string>
+    <string name="api_key_hint">Clé API (stockée de façon chiffrée)</string><string name="cleanup_provider_help">Après la dictée, OpenWispr corrige les erreurs de transcription, la ponctuation et la mise en forme. Groq est recommandé.</string>
     <string name="invalid_cleanup_url">URL de base de correction invalide</string><string name="cleanup_key_cleared">Clé API de correction supprimée</string>
     <string name="custom_instructions_help">Ces consignes complètent les règles de correction intégrées à OpenWispr. Elles ne peuvent pas remplacer ses règles de sécurité, de mise en forme ou d’autocorrection.</string>
     <string name="trigger_phrase_help">Prononcez cette phrase au début d’un enregistrement pour activer le mode commande au lieu de la dictée normale.</string>
@@ -73,9 +72,8 @@
     <string name="openrouter_help">OpenRouter utilise l’URL et le modèle par défaut ci-dessus. Pour DeepSeek, définissez l’URL sur https://api.deepseek.com/v1 et le modèle sur deepseek-chat. L’URL HTTPS doit se terminer par /v1 ou /chat/completions.</string>
     <string name="cleanup_api_key_cleared">Clé API de correction supprimée</string><string name="custom_instructions_placeholder">Ex. : toujours écrire NASA en toutes lettres</string>
     <string name="trigger_phrase_placeholder">Whisper Command</string><string name="api_key_title">Clé API Groq</string>
-    <string name="cleanup_provider_title">Fournisseur de correction</string><string name="clear_cleanup_key">Supprimer la clé API de correction</string>
-    <string name="provider_groq_openai">Groq | Compatible OpenAI (OpenRouter, DeepSeek, etc.)</string>
-    <string name="choose_cleanup_provider">Choisissez l’API de chat utilisée uniquement pour corriger la transcription. La reconnaissance vocale cloud reste assurée par Groq Whisper Large V3 Turbo.</string>
+    <string name="cleanup_provider_title">Service de correction</string><string name="clear_cleanup_key">Supprimer la clé API de correction</string>
+    <string name="provider_groq_openai">Service personnalisé (compatible OpenAI, dont OpenRouter et DeepSeek)</string>
     <string name="command_mode_help">Prononcez cette phrase au début d’un enregistrement pour activer le mode commande au lieu de la dictée normale.</string>
     <string name="grant_audio_in_app">Accordez l’autorisation audio dans l’application OpenWispr</string><string name="audio_permission_denied">Autorisation audio refusée</string><string name="local_error">Échec de la transcription sur l’appareil. Veuillez réessayer.</string>
     <string name="transcription_error">Échec de la transcription. Veuillez réessayer.</string><string name="no_speech">Aucune parole détectée</string><string name="cleanup_needs_key">La correction nécessite une clé API. Le texte brut sera utilisé.</string>
@@ -93,4 +91,26 @@
     <string name="overlay_content_description">Bulle de dictée OpenWispr</string><string name="no_audio_captured">Aucun son enregistré</string><string name="set_groq_key_in_app">Configurez une clé API Groq dans l’application OpenWispr</string>
     <string name="groq_provider">Groq</string>
     <string name="percent_unit">pour cent</string>
+    <string name="text_enhancement">Amélioration du texte</string>
+    <string name="text_enhancement_help">Après la dictée, OpenWispr corrige les erreurs de transcription, la ponctuation et la mise en forme. Groq est recommandé et utilise la clé Groq enregistrée dans les paramètres. Choisissez Service personnalisé pour utiliser OpenRouter, DeepSeek ou un autre service compatible.</string>
+    <string name="cleanup_transcript">Améliorer le texte</string>
+    <string name="cleanup_service">Service de correction</string>
+    <string name="groq_recommended">Groq (recommandé)</string>
+    <string name="custom_service">Service personnalisé</string>
+    <string name="choose_cleanup_provider">Groq est recommandé et utilise la clé enregistrée dans les paramètres. Choisissez Service personnalisé pour connecter OpenRouter, DeepSeek ou un autre service compatible.</string>
+    <string name="custom_service_help">Saisissez les paramètres de connexion et la clé fournis par le service choisi. OpenRouter et DeepSeek sont des exemples de services compatibles.</string>
+    <string name="custom_service_url">URL API du service</string>
+    <string name="custom_service_model">Nom du modèle</string>
+    <string name="custom_service_key">Clé API de ce service</string>
+    <string name="cleanup_service_groq_ready">Groq (recommandé)</string>
+    <string name="cleanup_service_groq_setup">Groq (recommandé) · Ajoutez votre clé Groq dans les paramètres</string>
+    <string name="cleanup_service_custom_ready">Service personnalisé · Configuré</string>
+    <string name="cleanup_service_custom_setup">Service personnalisé · Ajoutez sa clé</string>
+    <string name="fork_about_summary">OpenWispr pour Android est maintenu par VGKeeper. Il s’agit d’un fork basé sur le projet open source OpenWhispr.</string>
+    <string name="current_source_code">Code source de cette version</string>
+    <string name="current_source_code_summary">VGKeeper/OpenWhispr</string>
+    <string name="original_project">Projet OpenWhispr original</string>
+    <string name="original_project_summary">Projet amont open source</string>
+    <string name="project_license">Licence</string>
+    <string name="project_license_summary">Apache License 2.0</string>
 </resources>

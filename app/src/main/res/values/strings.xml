@@ -25,7 +25,6 @@
     <string name="cloud_transcription">Use cloud transcription</string>
     <string name="requires_groq_key">Requires Groq API key</string>
     <string name="post_processing">Post-Processing</string>
-    <string name="cleanup_transcript">Cleanup transcript</string>
     <string name="voice_commands">Voice Commands</string>
     <string name="custom_dictionary">Custom dictionary</string>
     <string name="bubble_size">Bubble size</string>
@@ -48,7 +47,7 @@
     <string name="dictionary_no_text">No selected text to add</string>
     <string name="dictionary_saved">Dictionary saved</string>
     <string name="setup">Setup</string><string name="engine">Engine</string><string name="accessibility_help">Needed to detect the focused text field and insert the cleaned-up text there.</string>
-    <string name="cleanup_provider">Cleanup provider</string><string name="add_custom_instructions">Add custom instructions</string><string name="tap_add_refinements">Tap to add extra refinements</string>
+    <string name="cleanup_provider">Cleanup service</string><string name="add_custom_instructions">Add custom instructions</string><string name="tap_add_refinements">Tap to add extra refinements</string>
     <string name="trigger_phrase">Trigger phrase</string><string name="tap_to_change">Tap to change</string><string name="see_what_you_can_say">See what you can say</string>
     <string name="add_dictionary_words">Add words used in transcription</string><string name="groq_api_key">Groq API Key</string><string name="tap_to_set">Tap to set</string>
     <string name="floating_bubble">Floating dictation bubble</string><string name="github">GitHub</string><string name="view_source_releases">View source &amp; releases</string>
@@ -60,7 +59,7 @@
     <string name="downloading_update">Downloading update…</string><string name="download_failed">Update download failed. Please try again.</string><string name="installer_failed">Couldn’t start the installer. Try opening the downloaded APK manually.</string>
     <string name="keep_dictation_running">Keep dictation running</string><string name="dictionary_hint">One word or phrase per line</string>
     <string name="dictionary_help">Saved on this device. Hotword boosting works with sherpa-onnx transducer models; cloud cleanup uses these as spelling references.</string>
-    <string name="api_key_hint">API key (stored encrypted)</string><string name="cleanup_provider_help">Choose the chat API used only for transcript cleanup. Cloud speech transcription remains on Groq Whisper Large V3 Turbo.</string>
+    <string name="api_key_hint">API key (stored encrypted)</string><string name="cleanup_provider_help">After you dictate, OpenWispr corrects recognition mistakes, punctuation, and formatting. Groq is recommended.</string>
     <string name="invalid_cleanup_url">Invalid cleanup base URL</string><string name="cleanup_key_cleared">Cleanup API key cleared</string>
     <string name="custom_instructions_help">These are appended to OpenWispr’s built-in cleanup rules. They can’t override its safety, formatting, or self-correction behavior.</string>
     <string name="trigger_phrase_help">Say this phrase at the start of a recording to switch into command mode instead of normal dictation.</string>
@@ -73,9 +72,8 @@
     <string name="openrouter_help">OpenRouter uses the default URL and model above. For DeepSeek, set the URL to https://api.deepseek.com/v1 and model to deepseek-chat. Use an HTTPS base URL ending in /v1 or /chat/completions.</string>
     <string name="cleanup_api_key_cleared">Cleanup API key cleared</string><string name="custom_instructions_placeholder">e.g. always spell out “NASA” in full</string>
     <string name="trigger_phrase_placeholder">Whisper Command</string><string name="api_key_title">Groq API Key</string>
-    <string name="cleanup_provider_title">Cleanup provider</string><string name="clear_cleanup_key">Clear cleanup API key</string>
-    <string name="provider_groq_openai">Groq | OpenAI-compatible (OpenRouter, DeepSeek, etc.)</string>
-    <string name="choose_cleanup_provider">Choose the chat API used only for transcript cleanup. Cloud speech transcription remains on Groq Whisper Large V3 Turbo.</string>
+    <string name="cleanup_provider_title">Cleanup service</string><string name="clear_cleanup_key">Clear cleanup API key</string>
+    <string name="provider_groq_openai">Custom service (OpenAI-compatible, including OpenRouter and DeepSeek)</string>
     <string name="command_mode_help">Say this phrase at the start of a recording to switch into command mode instead of normal dictation.</string>
     <string name="grant_audio_in_app">Grant audio permission in OpenWispr app</string><string name="audio_permission_denied">Audio permission denied</string><string name="local_error">On-device transcription failed. Please try again.</string>
     <string name="transcription_error">Transcription failed. Please try again.</string><string name="no_speech">No speech detected</string><string name="cleanup_needs_key">Cleanup needs an API key. Using raw text.</string>
@@ -93,4 +91,26 @@
     <string name="overlay_content_description">OpenWispr dictation bubble</string><string name="no_audio_captured">No audio captured</string><string name="set_groq_key_in_app">Set Groq API key in OpenWispr app</string>
     <string name="groq_provider">Groq</string>
     <string name="percent_unit">percent</string>
+    <string name="text_enhancement">Text enhancement</string>
+    <string name="text_enhancement_help">After you dictate, OpenWispr corrects recognition mistakes, punctuation, and formatting. Groq is recommended and uses the Groq key saved in Settings. Choose Custom service to use OpenRouter, DeepSeek, or another compatible service.</string>
+    <string name="cleanup_transcript">Improve text</string>
+    <string name="cleanup_service">Cleanup service</string>
+    <string name="groq_recommended">Groq (recommended)</string>
+    <string name="custom_service">Custom service</string>
+    <string name="choose_cleanup_provider">Groq is recommended and uses the key saved in Settings. Choose Custom service to connect OpenRouter, DeepSeek, or another compatible service.</string>
+    <string name="custom_service_help">Enter the connection details and key provided by your chosen service. OpenRouter and DeepSeek are examples of compatible services.</string>
+    <string name="custom_service_url">Service API URL</string>
+    <string name="custom_service_model">Model name</string>
+    <string name="custom_service_key">API key for this service</string>
+    <string name="cleanup_service_groq_ready">Groq (recommended)</string>
+    <string name="cleanup_service_groq_setup">Groq (recommended) · Add your Groq key in Settings</string>
+    <string name="cleanup_service_custom_ready">Custom service · Configured</string>
+    <string name="cleanup_service_custom_setup">Custom service · Add its key</string>
+    <string name="fork_about_summary">OpenWispr for Android is maintained by VGKeeper. It is a fork based on the open-source OpenWhispr project.</string>
+    <string name="current_source_code">Code source for this version</string>
+    <string name="current_source_code_summary">VGKeeper/OpenWhispr</string>
+    <string name="original_project">Original OpenWhispr project</string>
+    <string name="original_project_summary">Open-source upstream project</string>
+    <string name="project_license">License</string>
+    <string name="project_license_summary">Apache License 2.0</string>
 </resources>

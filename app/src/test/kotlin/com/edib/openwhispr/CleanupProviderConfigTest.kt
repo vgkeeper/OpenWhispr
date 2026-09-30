@@ -15,6 +15,8 @@ class CleanupProviderConfigTest {
 
         assertEquals(CleanupProviderConfig.Provider.GROQ, existingInstall.provider)
         assertEquals(CleanupProviderConfig.Provider.GROQ, unknown.provider)
+        assertFalse(existingInstall.provider.requiresCustomConfiguration)
+        assertTrue(CleanupProviderConfig.Provider.OPENAI_COMPATIBLE.requiresCustomConfiguration)
         assertEquals(CleanupProviderConfig.GROQ_CHAT_COMPLETIONS_URL, existingInstall.chatCompletionsUrl().toString())
         assertEquals(CleanupProviderConfig.GROQ_MODEL, existingInstall.requestModel())
         assertEquals(CleanupProviderConfig.DEFAULT_BASE_URL, existingInstall.baseUrl)

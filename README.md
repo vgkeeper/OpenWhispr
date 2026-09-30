@@ -33,6 +33,10 @@ It supports:
 - **Organized settings**: Status / Dictation / Settings tabs, with a collapsible setup checklist (Audio, Accessibility, Battery) that folds away once everything's green
 - **Restricted settings help**: on Android 13+, sideloaded apps have the Accessibility toggle blocked by default with no explanation — the app walks you through unlocking it before sending you to the system screen
 
+## Fork and upstream identity
+
+This is the VGKeeper-maintained Android fork of the open-source [OpenWhispr project](https://github.com/EdiBianco/OpenWhispr). The app keeps the original project’s license and attribution notices; see [LICENSE](LICENSE). The upstream repository currently identifies its license as Apache-2.0.
+
 ## Why I built this
 
 After trying [Freeflow](https://github.com/zachlatta/freeflow) on macOS, I went looking for something with the same effectiveness and usability on Android — and couldn't find it. So I decided to build it myself, exactly the way I wanted it, starting from a codebase simple enough to actually customize.
@@ -43,7 +47,7 @@ That codebase was [kafkasl/phone-whisper](https://github.com/kafkasl/phone-whisp
 
 ### Easiest: download the APK
 
-Grab the latest debug APK from the [Releases page](https://github.com/EdiBianco/OpenWhispr/releases) on this fork. A [GitHub Actions workflow](.github/workflows/build-apk.yml) builds and publishes a new version-tagged release automatically on every push to `main`.
+Grab the latest debug APK from the [Releases page](https://github.com/vgkeeper/OpenWhispr/releases) for the VGKeeper-maintained fork. A [GitHub Actions workflow](.github/workflows/build-apk.yml) builds a debug APK for validation; on a release push to `main`, it publishes the versioned APK to this fork's GitHub Releases.
 
 Open it on your phone, install it, then launch the app once to finish setup.
 
@@ -56,7 +60,7 @@ The [APK workflow](.github/workflows/build-apk.yml) runs tests, Android lint, an
 Requires JDK 17 and Android SDK.
 
 ```bash
-git clone https://github.com/EdiBianco/OpenWhispr.git && cd OpenWhispr
+git clone https://github.com/vgkeeper/OpenWhispr.git && cd OpenWhispr
 make build
 ```
 

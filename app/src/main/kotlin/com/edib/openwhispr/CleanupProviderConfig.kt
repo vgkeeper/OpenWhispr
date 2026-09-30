@@ -18,6 +18,9 @@ data class CleanupProviderConfig(
         GROQ("groq", "Groq"),
         OPENAI_COMPATIBLE("openai_compatible", "OpenAI-compatible");
 
+        val requiresCustomConfiguration: Boolean
+            get() = this == OPENAI_COMPATIBLE
+
         companion object {
             /** Missing/unknown persisted values keep existing installs on Groq. */
             fun fromPreference(value: String?): Provider =

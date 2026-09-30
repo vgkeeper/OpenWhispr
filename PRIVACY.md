@@ -36,4 +36,4 @@ Third-party services you choose to use, such as Groq, may process data according
 
 ## Contact
 
-For questions about privacy, open an issue at: https://github.com/EdiBianco/OpenWhispr
+For questions about privacy, open an issue in the VGKeeper-maintained fork: https://github.com/vgkeeper/OpenWhispr/issues

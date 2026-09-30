@@ -220,14 +220,14 @@ class MainActivity : AppCompatActivity() {
         for (m in MODEL_CATALOG) modelContainer.addView(buildModelRow(m))
         dictationContainer.addView(modelContainer)
 
-        dictationContainer.addView(sectionHeader(getString(R.string.post_processing)))
+        dictationContainer.addView(sectionHeader(getString(R.string.text_enhancement)))
 
         val isPostProcessing = prefs().getBoolean("use_post_processing", false)
         val postProcessSwitch = MaterialSwitch(this).apply {
             isChecked = isPostProcessing
             isClickable = false
         }
-        val postProcessRow = settingsRow(getString(R.string.cleanup_transcript), getString(R.string.cleanup_provider_help), postProcessSwitch) {
+        val postProcessRow = settingsRow(getString(R.string.cleanup_transcript), getString(R.string.text_enhancement_help), postProcessSwitch) {
             val newVal = !postProcessSwitch.isChecked
             prefs().edit().putBoolean("use_post_processing", newVal).apply()
             postProcessSwitch.isChecked = newVal
@@ -235,7 +235,7 @@ class MainActivity : AppCompatActivity() {
         }
         dictationContainer.addView(postProcessRow)
 
-        cleanupProviderRow = settingsRow(getString(R.string.cleanup_provider), getString(R.string.groq_chat_api)) {
+        cleanupProviderRow = settingsRow(getString(R.string.cleanup_service), getString(R.string.cleanup_service_groq_ready)) {
             promptCleanupProvider()
         }
         cleanupProviderRowSub = cleanupProviderRow.findViewWithTag("subtitle")
@@ -365,12 +365,21 @@ class MainActivity : AppCompatActivity() {
         }
         settingsContainer.addView(settingsRow(getString(R.string.version), versionName))
 
-        settingsContainer.addView(settingsRow(getString(R.string.github), getString(R.string.view_source_releases)) {
-            try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/EdiBianco/OpenWhispr")))
-            } catch (e: Exception) {
-                toast(getString(R.string.open_browser_failed))
-            }
+        val forkAbout = TextView(this).apply {
+            text = getString(R.string.fork_about_summary)
+            textSize = 14f
+            setTextColor(attrColor(android.R.attr.textColorSecondary))
+            setPadding(dp(16), dp(8), dp(16), dp(8))
+        }
+        settingsContainer.addView(forkAbout)
+        settingsContainer.addView(settingsRow(getString(R.string.current_source_code), getString(R.string.current_source_code_summary)) {
+            openExternalUrl(ForkLinks.FORK_REPOSITORY_URL)
+        })
+        settingsContainer.addView(settingsRow(getString(R.string.original_project), getString(R.string.original_project_summary)) {
+            openExternalUrl(ForkLinks.UPSTREAM_REPOSITORY_URL)
+        })
+        settingsContainer.addView(settingsRow(getString(R.string.project_license), getString(R.string.project_license_summary)) {
+            openExternalUrl(ForkLinks.LICENSE_URL)
         })
 
         settingsContainer.addView(settingsRow(getString(R.string.check_updates), getString(R.string.tap_check_now)) {
@@ -814,7 +823,7 @@ class MainActivity : AppCompatActivity() {
             adapter = ArrayAdapter(
                 this@MainActivity,
                 android.R.layout.simple_spinner_item,
-                listOf(getString(R.string.groq_provider), getString(R.string.provider_groq_openai)),
+                listOf(getString(R.string.groq_recommended), getString(R.string.custom_service)),
             ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
             setSelection(providers.indexOf(config.provider))
         }
@@ -834,10 +843,24 @@ class MainActivity : AppCompatActivity() {
             importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
             setText(SecureKeyStorage.cleanupApiKey(this@MainActivity))
         }
-        val details = TextView(this).apply {
-            text = getString(R.string.openrouter_help)
+        fun customFieldLabel(labelRes: Int) = TextView(this).apply {
+            text = getString(labelRes)
             textSize = 13f
             setTextColor(attrColor(android.R.attr.textColorSecondary))
+            setPadding(0, dp(8), 0, dp(2))
+        }
+        val baseUrlLabel = customFieldLabel(R.string.custom_service_url)
+        val modelLabel = customFieldLabel(R.string.custom_service_model)
+        val apiKeyLabel = customFieldLabel(R.string.custom_service_key)
+        val details = TextView(this).apply {
+            text = getString(R.string.custom_service_help)
+            textSize = 13f
+            setTextColor(attrColor(android.R.attr.textColorSecondary))
+        }
+        val customFields = listOf<View>(baseUrlLabel, baseUrl, modelLabel, model, apiKeyLabel, apiKey, details)
+        fun updateCustomFields() {
+            val customSelected = providers[providerPicker.selectedItemPosition].requiresCustomConfiguration
+            customFields.forEach { it.visibility = if (customSelected) View.VISIBLE else View.GONE }
         }
         val container = vertical(0, 0).apply {
             addView(TextView(this@MainActivity).apply {
@@ -847,8 +870,11 @@ class MainActivity : AppCompatActivity() {
                 setPadding(0, 0, 0, dp(8))
             })
             addView(providerPicker)
+            addView(baseUrlLabel)
             addView(baseUrl)
+            addView(modelLabel)
             addView(model)
+            addView(apiKeyLabel)
             addView(apiKey)
             addView(details.apply { setPadding(0, dp(8), 0, 0) })
         }
@@ -860,6 +886,19 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton(getString(R.string.cancel), null)
             .create()
         dialog.setOnShowListener {
+            updateCustomFields()
+            dialog.getButton(android.app.AlertDialog.BUTTON_NEUTRAL).visibility =
+                if (providers[providerPicker.selectedItemPosition] == CleanupProviderConfig.Provider.OPENAI_COMPATIBLE)
+                    View.VISIBLE else View.GONE
+            providerPicker.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    updateCustomFields()
+                    dialog.getButton(android.app.AlertDialog.BUTTON_NEUTRAL).visibility =
+                        if (providers[position] == CleanupProviderConfig.Provider.OPENAI_COMPATIBLE)
+                            View.VISIBLE else View.GONE
+                }
+                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) = Unit
+            }
             dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 val selectedProvider = providers[providerPicker.selectedItemPosition]
                 val nextConfig = CleanupProviderConfig(
@@ -878,8 +917,10 @@ class MainActivity : AppCompatActivity() {
                     .putString("cleanup_base_url", nextConfig.baseUrl)
                     .putString("cleanup_model", nextConfig.model)
                     .apply()
-                apiKey.text.toString().trim().takeIf { it.isNotBlank() }
-                    ?.let { SecureKeyStorage.saveCleanupApiKey(this, it) }
+                if (selectedProvider == CleanupProviderConfig.Provider.OPENAI_COMPATIBLE) {
+                    apiKey.text.toString().trim().takeIf { it.isNotBlank() }
+                        ?.let { SecureKeyStorage.saveCleanupApiKey(this, it) }
+                }
                 dialog.dismiss()
                 refresh()
             }
@@ -1049,6 +1090,14 @@ class MainActivity : AppCompatActivity() {
         ta.recycle()
         return color
     }
+    private fun openExternalUrl(url: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        } catch (e: Exception) {
+            toast(getString(R.string.open_browser_failed))
+        }
+    }
+
     private fun cleanupProviderConfig() = CleanupProviderConfig.fromPreferences(
         prefs().getString("cleanup_provider", null),
         prefs().getString("cleanup_base_url", null),
@@ -1061,9 +1110,13 @@ class MainActivity : AppCompatActivity() {
             CleanupProviderConfig.Provider.GROQ -> SecureKeyStorage.groqApiKey(this).isNotBlank()
             CleanupProviderConfig.Provider.OPENAI_COMPATIBLE -> SecureKeyStorage.cleanupApiKey(this).isNotBlank()
         }
-        val endpoint = if (config.provider == CleanupProviderConfig.Provider.GROQ) getString(R.string.groq_chat_api) else config.model
-        return getString(R.string.provider_summary, endpoint,
-            getString(if (configured) R.string.cleanup_key_saved else R.string.cleanup_key_needed))
+        val summary = when (config.provider) {
+            CleanupProviderConfig.Provider.GROQ ->
+                if (configured) R.string.cleanup_service_groq_ready else R.string.cleanup_service_groq_setup
+            CleanupProviderConfig.Provider.OPENAI_COMPATIBLE ->
+                if (configured) R.string.cleanup_service_custom_ready else R.string.cleanup_service_custom_setup
+        }
+        return getString(summary)
     }
 
     private fun dictionarySummary(): String {
