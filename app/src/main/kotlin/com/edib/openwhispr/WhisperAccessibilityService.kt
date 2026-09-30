@@ -686,7 +686,8 @@ class WhisperAccessibilityService : AccessibilityService() {
             }
 
             val customInstructions = prefs().getString("custom_instructions", "") ?: ""
-            val prompt = PostProcessor.effectivePrompt(customInstructions)
+            val vocabulary = Dictionary.load(prefs())
+            val prompt = PostProcessor.effectivePrompt(customInstructions, vocabulary)
 
             PostProcessor.process(text, prompt, apiKey) { result ->
                 handler.post {

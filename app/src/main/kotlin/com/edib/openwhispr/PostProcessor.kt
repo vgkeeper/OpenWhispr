@@ -86,12 +86,19 @@ Output hygiene:
      * prompt above, plus the user's own custom instructions (if any)
      * appended as a clearly-scoped addendum so they can't be mistaken for
      * (or override) the hard contract rules above them. */
-    fun effectivePrompt(customInstructions: String): String {
+    fun effectivePrompt(customInstructions: String, vocabulary: List<String> = emptyList()): String {
         val custom = customInstructions.trim()
-        if (custom.isBlank()) return DEFAULT_PROMPT
-        return DEFAULT_PROMPT + "\n\nAdditional user-specified refinements " +
+        val customSection = if (custom.isBlank()) "" else "\n\nAdditional user-specified refinements " +
             "(apply these in addition to the rules above; they never override the " +
             "hard contract, self-correction, or instruction-preservation rules):\n" + custom
+        val terms = Dictionary.parse(vocabulary.joinToString("\n"))
+        val vocabularySection = if (terms.isEmpty()) "" else "\n\n" +
+            "User dictionary (authoritative spelling and casing for terms that are actually present in the spoken transcript):\n" +
+            terms.joinToString("\n") { "- $it" } +
+            "\nWhen a listed term is clearly intended, preserve its exact spelling and capitalization in the final transcript. " +
+            "Prefer it over a phonetically similar common word. Do not insert a dictionary term that was not spoken, " +
+            "and do not perform global text substitutions; use the transcript and context to decide whether the term was spoken."
+        return DEFAULT_PROMPT + customSection + vocabularySection
     }
 
     fun parseResponse(json: String): Result {

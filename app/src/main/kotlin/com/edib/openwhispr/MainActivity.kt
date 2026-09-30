@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         // Best-effort: lets the background service show its "still running"
         // notification (Android 13+ requires this permission for any
         // notification, including the foreground-service one). Not gated on
@@ -269,6 +270,7 @@ class MainActivity : AppCompatActivity() {
         // ================= Settings tab =================
 
         settingsContainer.addView(sectionHeader("Settings"))
+        settingsContainer.addView(settingsRow("Custom dictionary", Dictionary.load(prefs()).let { if (it.isEmpty()) "Add words used in transcription" else "${it.size} words" }) { promptDictionary() })
 
         val keyRow = settingsRow("Groq API Key", "Tap to set") { promptApiKey() }
         keyRowSub = keyRow.findViewWithTag("subtitle")
@@ -681,6 +683,27 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Disable restrictions") { _, _ -> requestBatteryExemption() }
             .setNegativeButton("Later", null)
             .show()
+    }
+
+    private fun promptDictionary() {
+        val input = EditText(this).apply {
+            hint = "One word or phrase per line"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            minLines = 6
+            setText(Dictionary.load(prefs()).joinToString("\n"))
+        }
+        val dialog = android.app.AlertDialog.Builder(this)
+            .setTitle("Custom dictionary")
+            .setMessage("Saved on this device. Hotword boosting works with sherpa-onnx transducer models; cloud cleanup uses these as spelling references.")
+            .setView(input)
+            .setPositiveButton("Save") { _, _ ->
+                Dictionary.save(prefs(), Dictionary.parse(input.text.toString()))
+                WhisperAccessibilityService.instance?.reloadModel()
+                toast(getString(R.string.dictionary_saved))
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+        showResizingDialog(dialog)
     }
 
     private fun promptApiKey() {

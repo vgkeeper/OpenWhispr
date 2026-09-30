@@ -6,4 +6,7 @@
     <string name="notification_channel_description">Keeps the dictation overlay running in the background</string>
     <string name="notification_content_title">OpenWispr is running</string>
     <string name="notification_content_text">Tap the floating mic to dictate</string>
+    <string name="process_text_label">Add to OpenWhispr dictionary</string>
+    <string name="dictionary_no_text">No selected text to add</string>
+    <string name="dictionary_added">Added to dictionary</string>
 </resources>

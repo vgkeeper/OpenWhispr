@@ -44,6 +44,11 @@ class LocalTranscriber private constructor(private val recognizer: OfflineRecogn
                 return null
             }
 
+            // sherpa-onnx supports hotword boosts for transducer decoding, not Whisper/CTC.
+            if (config.modelConfig.modelType == "nemo_transducer") {
+                val words = Dictionary.load(ctx.getSharedPreferences("openwhispr", Context.MODE_PRIVATE))
+                config.hotwordsFile = Dictionary.writeHotwords(File(ctx.filesDir, "dictionary/hotwords.txt"), words)
+            }
             return try {
                 val recognizer = OfflineRecognizer(assetManager = null, config = config)
                 Log.i(TAG, "Loaded model: $modelName")
