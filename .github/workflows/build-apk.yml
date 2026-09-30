@@ -2,15 +2,19 @@ name: Build APK
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
+    if: ${{ github.repository == 'vgkeeper/OpenWhispr' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')) }}
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      changelog: ${{ steps.changelog.outputs.notes }}
     steps:
       - uses: actions/checkout@v4
 
@@ -18,7 +22,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -30,8 +34,18 @@ jobs:
           if [ -z "$SDKMANAGER" ]; then
             SDKMANAGER="$(command -v sdkmanager || true)"
           fi
+          if [ -z "$SDKMANAGER" ]; then
+            echo "::error::Android SDK manager was not found."
+            exit 1
+          fi
           yes | "$SDKMANAGER" --licenses > /dev/null || true
           "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Run JVM unit tests
+        run: ./gradlew testDebugUnitTest --no-daemon
+
+      - name: Run Android lint
+        run: ./gradlew lintDebug --no-daemon
 
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon
@@ -67,18 +81,91 @@ jobs:
             echo "CHANGELOG_EOF"
           } >> "$GITHUB_OUTPUT"
 
+  telegram:
+    needs: build
+    if: ${{ github.repository == 'vgkeeper/OpenWhispr' && needs.build.result == 'success' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')) }}
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: openwispr-debug-apk
+          path: dist
+
+      - name: Send APK to Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ vars.TELEGRAM_CHAT_ID }}
+          APP_VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          if [[ -z "$TELEGRAM_BOT_TOKEN" ]]; then
+            echo "::error::Required GitHub Actions secret TELEGRAM_BOT_TOKEN is not configured."
+            exit 1
+          fi
+          if [[ -z "$TELEGRAM_CHAT_ID" ]]; then
+            echo "::error::Required repository variable TELEGRAM_CHAT_ID is not configured."
+            exit 1
+          fi
+
+          APK_PATH="dist/openwispr-v${APP_VERSION}-debug.apk"
+          if [[ ! -f "$APK_PATH" ]]; then
+            echo "::error::Built APK artifact was not found."
+            exit 1
+          fi
+
+          RESPONSE_FILE="$(mktemp)"
+          trap 'rm -f "$RESPONSE_FILE"' EXIT
+          CAPTION="OpenWhispr v${APP_VERSION} | Ref: ${GITHUB_REF_NAME} | Commit: ${GITHUB_SHA:0:7}"
+          if ! HTTP_STATUS=$(curl --silent --show-error --output "$RESPONSE_FILE" --write-out '%{http_code}' \
+            --form "chat_id=${TELEGRAM_CHAT_ID}" \
+            --form "document=@${APK_PATH}" \
+            --form "caption=${CAPTION}" \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" 2>/dev/null); then
+            echo "::error::Telegram API request failed."
+            exit 1
+          fi
+
+          if [[ ! "$HTTP_STATUS" =~ ^2[0-9][0-9]$ ]] || ! python3 - "$RESPONSE_FILE" 2>/dev/null <<'PY'
+          import json
+          import sys
+
+          with open(sys.argv[1], encoding="utf-8") as response_file:
+              response = json.load(response_file)
+          sys.exit(0 if response.get("ok") is True else 1)
+          PY
+          then
+            echo "::error::Telegram rejected the APK delivery."
+            exit 1
+          fi
+
+          echo "APK delivered to Telegram successfully."
+
+  release:
+    needs: build
+    if: ${{ github.repository == 'vgkeeper/OpenWhispr' && github.ref == 'refs/heads/main' && needs.build.result == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: openwispr-debug-apk
+          path: dist
+
       - name: Publish APK to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.version.outputs.version }}
-          name: OpenWispr v${{ steps.version.outputs.version }}
+          tag_name: v${{ needs.build.outputs.version }}
+          name: OpenWispr v${{ needs.build.outputs.version }}
           body: |
             Free, open-source push-to-talk dictation for Android. Debug build from commit `${{ github.sha }}`.
             Cloud transcription via Groq Whisper Large V3 Turbo, with cleanup through Groq or a configurable OpenAI-compatible provider; local transcription is also available.
 
             **What's new:**
             <!--WHATS_NEW_START-->
-            ${{ steps.changelog.outputs.notes }}
+            ${{ needs.build.outputs.changelog }}
             <!--WHATS_NEW_END-->
           generate_release_notes: true
           prerelease: false
