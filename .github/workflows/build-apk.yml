@@ -2,7 +2,7 @@ name: Build APK
 
 on:
   push:
-    branches: [main]
+    branches: [main, feat/cleanup-openai-compatible]
   workflow_dispatch: {}
 
 permissions:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    if: ${{ github.repository == 'vgkeeper/OpenWhispr' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')) }}
+    if: ${{ github.repository == 'vgkeeper/OpenWhispr' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/cleanup-openai-compatible'))) }}
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -83,7 +83,7 @@ jobs:
 
   telegram:
     needs: build
-    if: ${{ github.repository == 'vgkeeper/OpenWhispr' && needs.build.result == 'success' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')) }}
+    if: ${{ github.repository == 'vgkeeper/OpenWhispr' && needs.build.result == 'success' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/cleanup-openai-compatible'))) }}
     runs-on: ubuntu-latest
     permissions: {}
     steps:
