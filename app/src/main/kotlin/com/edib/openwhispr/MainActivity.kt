@@ -699,11 +699,11 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Save") { _, _ ->
                 Dictionary.save(prefs(), Dictionary.parse(input.text.toString()))
                 WhisperAccessibilityService.instance?.reloadModel()
-                toast(getString(R.string.dictionary_saved))
+                toast(getString(R.string.dictionary_added))
             }
             .setNegativeButton("Cancel", null)
             .create()
-        showResizingDialog(dialog)
+        dialog.show()
     }
 
     private fun promptApiKey() {
