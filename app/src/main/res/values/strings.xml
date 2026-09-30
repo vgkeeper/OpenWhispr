@@ -93,5 +93,4 @@
     <string name="overlay_content_description">OpenWispr dictation bubble</string><string name="no_audio_captured">No audio captured</string><string name="set_groq_key_in_app">Set Groq API key in OpenWispr app</string>
     <string name="groq_provider">Groq</string>
     <string name="percent_unit">percent</string>
-    <string name="fgs_special_use_subtype">Keeps the dictation overlay and text insertion service available in the background.</string>
 </resources>

@@ -93,5 +93,4 @@
     <string name="overlay_content_description">Bulle de dictée OpenWispr</string><string name="no_audio_captured">Aucun son enregistré</string><string name="set_groq_key_in_app">Configurez une clé API Groq dans l’application OpenWispr</string>
     <string name="groq_provider">Groq</string>
     <string name="percent_unit">pour cent</string>
-    <string name="fgs_special_use_subtype">Maintient la bulle de dictée et l’insertion de texte disponibles en arrière-plan.</string>
 </resources>

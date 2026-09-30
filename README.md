@@ -178,6 +178,8 @@ OpenWispr works best in apps that use standard Android text fields.
 Some apps use custom text surfaces or terminal-style views, which may not support direct accessibility paste.
 When insertion is not possible, OpenWispr falls back to copying the transcript to the clipboard.
 
+Android requires the `PROPERTY_SPECIAL_USE_FGS_SUBTYPE` manifest property to be a locale-invariant literal (Android lint rejects locale-qualified values there). The technical foreground-service subtype shown by the OS therefore remains the app's service identifier; in-app UI, notification text, accessibility label/description, and the native text-action label are localized.
+
 ### Termux
 
 Termux's main terminal area is not a standard Android text field, so direct insertion may not work there.

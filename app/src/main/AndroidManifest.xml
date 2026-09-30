@@ -57,7 +57,7 @@
                 android:resource="@xml/accessibility_service_config" />
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:resource="@string/fgs_special_use_subtype" />
+                android:value="OpenWispr dictation overlay/text-insertion service" />
         </service>
 
         <service
