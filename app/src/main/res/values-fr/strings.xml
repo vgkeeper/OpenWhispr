@@ -112,5 +112,5 @@
     <string name="original_project">Projet OpenWhispr original</string>
     <string name="original_project_summary">Projet amont open source</string>
     <string name="project_license">Licence</string>
-    <string name="project_license_summary">Apache License 2.0</string>
+    <string name="project_license_summary">Licence Apache 2.0</string>
 </resources>
