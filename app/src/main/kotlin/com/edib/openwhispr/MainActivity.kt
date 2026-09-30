@@ -17,6 +17,8 @@ import android.view.Gravity
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
@@ -67,6 +69,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         // Best-effort: lets the background service show its "still running"
         // notification (Android 13+ requires this permission for any
         // notification, including the foreground-service one). Not gated on
@@ -100,9 +103,9 @@ class MainActivity : AppCompatActivity() {
         outer.addView(header)
 
         tabLayout = TabLayout(this).apply {
-            addTab(newTab().setText("Status"))
-            addTab(newTab().setText("Dictation"))
-            addTab(newTab().setText("Settings"))
+            addTab(newTab().setText(getString(R.string.tab_status)))
+            addTab(newTab().setText(getString(R.string.tab_dictation)))
+            addTab(newTab().setText(getString(R.string.tab_settings)))
             addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab) { showTab(tab.position) }
                 override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -117,12 +120,12 @@ class MainActivity : AppCompatActivity() {
 
         // ================= Status tab =================
 
-        val statusRow = settingsRow("Status", "Checking...")
+        val statusRow = settingsRow(getString(R.string.tab_status), getString(R.string.checking))
         statusSubtitle = statusRow.findViewWithTag("subtitle")
         statusContainer.addView(statusRow)
 
         // --- Setup checklist card ---
-        setupCollapsedRow = settingsRow("Setup", "Checking...") {
+        setupCollapsedRow = settingsRow("Setup", getString(R.string.checking)) {
             setupExpanded = !setupExpanded
             refresh()
         }
@@ -137,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         statusContainer.addView(setupDoneSummary)
 
         audioDot = statusDot()
-        audioRow = settingsRow("Audio permission", "Checking...", leading = audioDot) {
+        audioRow = settingsRow(getString(R.string.audio_permission), getString(R.string.checking), leading = audioDot) {
             if (!hasPerm(Manifest.permission.RECORD_AUDIO)) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 1)
             }
@@ -146,7 +149,7 @@ class MainActivity : AppCompatActivity() {
         statusContainer.addView(audioRow)
 
         accDot = statusDot()
-        accRow = settingsRow("Accessibility service", "Checking...", leading = accDot) {
+        accRow = settingsRow(getString(R.string.accessibility_service), getString(R.string.checking), leading = accDot) {
             val alreadyEnabled = WhisperAccessibilityService.instance != null
             if (!alreadyEnabled && android.os.Build.VERSION.SDK_INT >= 33) {
                 showRestrictedSettingsHelp()
@@ -167,7 +170,7 @@ class MainActivity : AppCompatActivity() {
         statusContainer.addView(accCaption)
 
         batteryDot = statusDot()
-        batteryRow = settingsRow("Battery optimization", "Checking...", leading = batteryDot) {
+        batteryRow = settingsRow(getString(R.string.battery_optimization), getString(R.string.checking), leading = batteryDot) {
             requestBatteryExemption()
         }
         batteryRowSub = batteryRow.findViewWithTag("subtitle")
@@ -180,8 +183,8 @@ class MainActivity : AppCompatActivity() {
             isClickable = false
         }
         val serviceRow = settingsRow(
-            "Background service",
-            "Pause the mic overlay without disabling accessibility",
+            getString(R.string.background_service),
+            getString(R.string.background_service_summary),
             serviceSwitch
         ) {
             val newVal = !serviceSwitch.isChecked
@@ -200,7 +203,7 @@ class MainActivity : AppCompatActivity() {
             isChecked = isCloud
             isClickable = false
         }
-        val cloudRow = settingsRow("Use cloud transcription", "Requires Groq API key", cloudSwitch) {
+        val cloudRow = settingsRow(getString(R.string.cloud_transcription), getString(R.string.requires_groq_key), cloudSwitch) {
             val newCloud = !cloudSwitch.isChecked
             prefs().edit().putBoolean("use_local", !newCloud).apply()
             cloudSwitch.isChecked = newCloud
@@ -209,18 +212,18 @@ class MainActivity : AppCompatActivity() {
         dictationContainer.addView(cloudRow)
 
         modelContainer = vertical(0)
-        modelContainer.addView(sectionHeader("Local models"))
+        modelContainer.addView(sectionHeader(getString(R.string.local_models)))
         for (m in MODEL_CATALOG) modelContainer.addView(buildModelRow(m))
         dictationContainer.addView(modelContainer)
 
-        dictationContainer.addView(sectionHeader("Post-Processing"))
+        dictationContainer.addView(sectionHeader(getString(R.string.post_processing)))
 
         val isPostProcessing = prefs().getBoolean("use_post_processing", false)
         val postProcessSwitch = MaterialSwitch(this).apply {
             isChecked = isPostProcessing
             isClickable = false
         }
-        val postProcessRow = settingsRow("Cleanup transcript", "Uses Groq Chat API to fix grammar and punctuation", postProcessSwitch) {
+        val postProcessRow = settingsRow(getString(R.string.cleanup_transcript), getString(R.string.cleanup_transcript_summary), postProcessSwitch) {
             val newVal = !postProcessSwitch.isChecked
             prefs().edit().putBoolean("use_post_processing", newVal).apply()
             postProcessSwitch.isChecked = newVal
@@ -236,7 +239,7 @@ class MainActivity : AppCompatActivity() {
         customInstructionsRowSub.ellipsize = android.text.TextUtils.TruncateAt.END
         dictationContainer.addView(customInstructionsRow)
 
-        dictationContainer.addView(sectionHeader("Voice Commands"))
+        dictationContainer.addView(sectionHeader(getString(R.string.voice_commands)))
 
         val isVoiceCommands = prefs().getBoolean("voice_commands_enabled", false)
         val voiceCommandsSwitch = MaterialSwitch(this).apply {
@@ -261,27 +264,40 @@ class MainActivity : AppCompatActivity() {
         triggerPhraseRowSub = triggerPhraseRow.findViewWithTag("subtitle")
         voiceCommandsDetailContainer.addView(triggerPhraseRow)
 
-        val examplesRow = settingsRow("Command examples", "See what you can say") { showCommandExamples() }
+        val examplesRow = settingsRow(getString(R.string.command_examples), "See what you can say") { showCommandExamples() }
         voiceCommandsDetailContainer.addView(examplesRow)
 
         dictationContainer.addView(voiceCommandsDetailContainer)
 
         // ================= Settings tab =================
 
-        settingsContainer.addView(sectionHeader("Settings"))
+        settingsContainer.addView(sectionHeader(getString(R.string.tab_settings)))
 
         val keyRow = settingsRow("Groq API Key", "Tap to set") { promptApiKey() }
         keyRowSub = keyRow.findViewWithTag("subtitle")
         settingsContainer.addView(keyRow)
 
-        settingsContainer.addView(sectionHeader("About"))
+        settingsContainer.addView(sectionHeader(getString(R.string.about)))
+
+        settingsContainer.addView(settingsRow(getString(R.string.language), getString(R.string.language_summary)) {
+            val languages = arrayOf(getString(R.string.english), getString(R.string.french))
+            val selected = if (AppCompatDelegate.getApplicationLocales().toLanguageTags().startsWith("fr")) 1 else 0
+            android.app.AlertDialog.Builder(this)
+                .setTitle(R.string.language)
+                .setSingleChoiceItems(languages, selected) { dialog, which ->
+                    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(if (which == 1) "fr" else "en"))
+                    dialog.dismiss()
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        })
 
         val versionName = try {
             packageManager.getPackageInfo(packageName, 0).versionName ?: "unknown"
         } catch (e: Exception) {
             "unknown"
         }
-        settingsContainer.addView(settingsRow("Version", versionName))
+        settingsContainer.addView(settingsRow(getString(R.string.version), versionName))
 
         settingsContainer.addView(settingsRow("GitHub", "View source & releases") {
             try {
@@ -291,7 +307,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        settingsContainer.addView(settingsRow("Check for updates", "Tap to check now") {
+        settingsContainer.addView(settingsRow(getString(R.string.check_updates), getString(R.string.tap_check_now)) {
             checkForUpdate(force = true)
         })
 
@@ -380,7 +396,7 @@ class MainActivity : AppCompatActivity() {
         views.dlBtn.isEnabled = false
         views.progress.visibility = View.VISIBLE
         views.progress.isIndeterminate = false
-        views.subtitle.text = "Starting download..."
+        views.subtitle.text = getString(R.string.download_starting)
 
         ModelDownloader.download(this, model) { state ->
             runOnUiThread {
@@ -391,7 +407,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     is DownloadState.Extracting -> {
                         views.progress.isIndeterminate = true
-                        views.subtitle.text = "Extracting..."
+                        views.subtitle.text = getString(R.string.extracting)
                     }
                     is DownloadState.Done -> {
                         views.progress.visibility = View.GONE
@@ -441,8 +457,8 @@ class MainActivity : AppCompatActivity() {
         val hasModel = LocalTranscriber.availableModels(this).isNotEmpty()
         val unrestricted = isIgnoringBatteryOptimizations()
 
-        audioRowSub.text = if (audio) "Granted" else "Tap to grant permission"
-        accRowSub.text = if (acc) "Enabled" else "Tap to enable in settings"
+        audioRowSub.text = if (audio) getString(R.string.granted) else getString(R.string.tap_grant_permission)
+        accRowSub.text = if (acc) getString(R.string.enabled) else getString(R.string.tap_enable_settings)
         batteryRowSub.text = if (unrestricted)
             "Unrestricted — won't be shut down to save battery"
         else
@@ -500,7 +516,7 @@ class MainActivity : AppCompatActivity() {
         val postReady = !usePostProcessing || hasKey
         val ready = audio && acc && (localReady || cloudReady) && postReady
 
-        statusSubtitle.text = if (ready) "Ready — tap the overlay dot to dictate" else "Setup required"
+        statusSubtitle.text = if (ready) "Ready — tap the overlay dot to dictate" else getString(R.string.setup_required)
         statusSubtitle.setTextColor(if (ready) attrColor(androidx.appcompat.R.attr.colorPrimary) else attrColor(android.R.attr.textColorSecondary))
 
         refreshAllCards()
@@ -526,7 +542,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Open Accessibility settings") { _, _ ->
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -561,7 +577,7 @@ class MainActivity : AppCompatActivity() {
      * dialog linking to the release page when a newer version is
      * available. Runs automatically (and silently, when nothing's new)
      * once per app-open; [force] bypasses the cache interval and always
-     * gives feedback, for the manual "Check for updates" row. */
+     * gives feedback, for the manual getString(R.string.check_updates) row. */
     private fun checkForUpdate(force: Boolean = false) {
         val currentVersion = try {
             packageManager.getPackageInfo(packageName, 0).versionName
@@ -584,8 +600,8 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         )
-                        .setPositiveButton("Update") { _, _ -> downloadAndInstallUpdate(info) }
-                        .setNegativeButton("Later", null)
+                        .setPositiveButton(getString(R.string.update)) { _, _ -> downloadAndInstallUpdate(info) }
+                        .setNegativeButton(getString(R.string.later), null)
                         .show()
                 } else if (force) {
                     toast("You're up to date (v$currentVersion)")
@@ -628,7 +644,7 @@ class MainActivity : AppCompatActivity() {
                         toast("Couldn't open settings: ${e.message}")
                     }
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
             return
         }
@@ -679,9 +695,10 @@ class MainActivity : AppCompatActivity() {
                 "from the Android dialog this opens."
             )
             .setPositiveButton("Disable restrictions") { _, _ -> requestBatteryExemption() }
-            .setNegativeButton("Later", null)
+            .setNegativeButton(getString(R.string.later), null)
             .show()
     }
+
 
     private fun promptApiKey() {
         val link = TextView(this).apply {
@@ -704,13 +721,14 @@ class MainActivity : AppCompatActivity() {
         android.app.AlertDialog.Builder(this)
             .setTitle("Groq API Key")
             .setView(container)
-            .setPositiveButton("Save") { _, _ ->
+            .setPositiveButton(getString(R.string.save)) { _, _ ->
                 prefs().edit().putString("api_key", input.text.toString().trim()).apply()
                 refresh()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
+
 
     private fun promptCustomInstructions() {
         // The base cleanup prompt itself is fixed in PostProcessor and never
@@ -727,11 +745,11 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Add custom instructions")
             .setMessage("These are appended to OpenWispr's built-in cleanup rules. They can't override its safety, formatting, or self-correction behavior.")
             .setView(input.apply { setPadding(dp(24), dp(8), dp(24), dp(8)) })
-            .setPositiveButton("Save") { _, _ ->
+            .setPositiveButton(getString(R.string.save)) { _, _ ->
                 prefs().edit().putString("custom_instructions", input.text.toString().trim()).apply()
                 refresh()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -744,14 +762,14 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Trigger phrase")
             .setMessage("Say this phrase at the start of a recording to switch into command mode instead of normal dictation.")
             .setView(input.apply { setPadding(dp(24), dp(8), dp(24), dp(8)) })
-            .setPositiveButton("Save") { _, _ ->
+            .setPositiveButton(getString(R.string.save)) { _, _ ->
                 val phrase = input.text.toString().trim()
                 prefs().edit()
                     .putString("command_trigger_phrase", if (phrase.isBlank()) "Whisper Command" else phrase)
                     .apply()
                 refresh()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -769,7 +787,7 @@ class MainActivity : AppCompatActivity() {
             You can chain more than one: "$trigger, translate to Italian and turn it into a list" applies them in that order.
         """.trimIndent()
         android.app.AlertDialog.Builder(this)
-            .setTitle("Command examples")
+            .setTitle(getString(R.string.command_examples))
             .setMessage(message)
             .setPositiveButton("Got it", null)
             .show()
