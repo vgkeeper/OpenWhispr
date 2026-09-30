@@ -14,11 +14,11 @@ In local mode, audio is processed on-device using local speech recognition model
 
 In cloud mode, recorded audio is sent directly from the device to Groq's transcription API to generate text.
 
-If optional cleanup is enabled, the transcribed text is also sent directly from the device to Groq's chat API to improve punctuation, capitalization, and clarity.
+If optional cleanup is enabled, the transcribed text is sent directly from the device to the selected cleanup provider's OpenAI-compatible chat completions API. Cleanup uses Groq by default; you can instead configure another HTTPS-compatible endpoint, such as OpenRouter or DeepSeek. Speech transcription remains on Groq Whisper Large V3 Turbo whenever cloud transcription is selected.
 
 ## API keys
 
-If you use cloud features, your Groq API key is stored locally on your device in app storage and used to authenticate requests sent directly to Groq.
+Groq and optional cleanup-provider API keys are encrypted before storage in private app preferences using a non-exportable AES key held by the Android Keystore. Existing Groq keys from older app versions are migrated to encrypted storage on first access and then removed from their legacy preference. Keys are used only to authenticate direct requests to their respective providers; the app does not log them or send them to an OpenWispr server.
 
 I do not operate a relay server for these requests.
 

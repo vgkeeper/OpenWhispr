@@ -8,19 +8,19 @@ Free, open-source, on-device push-to-talk dictation for Android — a free alter
 
 Speak naturally into any app and OpenWispr turns your raw speech into clear, polished text: filler words removed, punctuation and formatting fixed automatically, then inserted straight into whatever field you're already typing in. Tap the floating button, speak, tap again — done.
 
-It's completely free to run. Cloud transcription and cleanup use your own [Groq](https://groq.com) API key, and Groq's free tier is generous enough for everyday dictation without paying anything. Prefer to keep everything on-device? Local transcription needs no API key or internet connection at all.
+It's completely free to run. Cloud transcription uses your own [Groq](https://groq.com) API key. Cleanup uses Groq by default, or can be configured for any OpenAI-compatible chat completions service such as OpenRouter or DeepSeek. Prefer to keep speech recognition on-device? Local transcription needs no API key or internet connection.
 
 It supports:
 
 - **Local on-device transcription** with sherpa-onnx — no API key, no internet required
 - **Cloud transcription** with Groq Whisper — free API key, fast, no local model download
-- **Optional AI cleanup** with Groq — removes filler words, fixes punctuation and grammar, formats emails
+- **Optional AI cleanup** with Groq or a configurable OpenAI-compatible provider, including OpenRouter and DeepSeek
 
 ## Features
 
-- **Two transcription modes**: cloud transcription via Groq Whisper (`whisper-large-v3`), or fully local, on-device transcription via sherpa-onnx — no API key, no internet, no data leaving the phone
-- **Optional AI cleanup**: Groq (`openai/gpt-oss-120b`) removes filler words, fixes punctuation and grammar, and formats emails, with a stricter prompt that handles self-corrections and preserves your intent instead of acting on it as a command — plus room to add your own custom instructions on top
-- **Free Groq API key**: the settings screen asks for a free [Groq API key](https://console.groq.com/keys) (`gsk_...`), with a direct link to get one
+- **Two transcription modes**: cloud transcription via Groq Whisper Large V3 Turbo (`whisper-large-v3-turbo`), or fully local, on-device transcription via sherpa-onnx — no API key, no internet, no data leaving the phone
+- **Optional AI cleanup**: Groq (`openai/gpt-oss-120b`) by default, or any OpenAI-compatible chat completions API with a custom HTTPS base URL, model, and key. OpenRouter and DeepSeek are supported. Cleanup removes filler words, fixes punctuation and grammar, and formats emails while preserving the dictated intent — plus room to add your own custom instructions
+- **Secure API keys**: Groq and cleanup credentials are encrypted using a non-exportable Android Keystore key; existing Groq keys migrate from legacy app preferences on first access
 - **Voice commands**: say "Whisper Command" at the start of a recording to switch into command mode instead of normal dictation — see [Voice commands](#voice-commands) below
 - **Multilingual**: works across languages for both transcription and cleanup
 - **Smart overlay visibility**: the mic overlay shows only while a text field is focused, fading in/out, using three redundant signals (accessibility focus events, a periodic focus poll, and system keyboard visibility) so it still shows up in apps with non-standard text composers (e.g. WhatsApp, Telegram)
@@ -100,7 +100,10 @@ Off by default -- enable it under **Voice Commands** in the app, where you can a
 4. Choose your transcription mode:
    - **Local**: download a model in the app
    - **Cloud**: paste your free [Groq API key](https://console.groq.com/keys) — the app links straight to that page when you tap to set the key
-5. When prompted, allow OpenWispr to run **unrestricted by battery optimization** — otherwise Android may shut the background service down and the overlay will disappear until you reopen the app
+5. Optionally enable **Cleanup transcript** in Dictation settings. Tap **Cleanup provider** to use Groq or configure an OpenAI-compatible service. OpenRouter's default endpoint/model are prefilled; for DeepSeek use `https://api.deepseek.com/v1` with model `deepseek-chat`, then enter that provider's API key
+6. When prompted, allow OpenWispr to run **unrestricted by battery optimization** — otherwise Android may shut the background service down and the overlay will disappear until you reopen the app
+
+Cloud speech transcription always uses your Groq key and Groq Whisper Large V3 Turbo. A separate cleanup provider/key affects transcript cleanup only.
 
 Once setup is done, the floating button is ready.
 
@@ -128,9 +131,9 @@ OpenWispr supports two modes:
 
 - **Local mode**: audio stays on-device
 - **Cloud mode**: audio is sent directly from your device to Groq's transcription API
-- **Optional cleanup**: transcript text is sent directly from your device to Groq's chat API
+- **Optional cleanup**: transcript text is sent directly from your device to the selected chat provider (Groq, OpenRouter, DeepSeek, or another configured OpenAI-compatible endpoint)
 
-I don't run a backend for this app. In cloud mode, requests go straight from your phone to Groq using your own API key.
+I don't run a backend for this app. Requests go straight from your phone to the selected service using your own API key.
 
 Full policy: [PRIVACY.md](PRIVACY.md)
 
