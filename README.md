@@ -18,7 +18,7 @@ It supports:
 
 ## Features
 
-- **Two transcription modes**: cloud transcription via Groq Whisper Large V3 (`whisper-large-v3`), or fully local, on-device transcription via sherpa-onnx — no API key, no internet, no data leaving the phone
+- **Two transcription modes**: cloud transcription via Groq Whisper Large V3 Turbo (`whisper-large-v3-turbo`), or fully local, on-device transcription via sherpa-onnx — no API key, no internet, no data leaving the phone
 - **Optional AI cleanup**: Groq (`openai/gpt-oss-120b`) by default, or any OpenAI-compatible chat completions API with a custom HTTPS base URL, model, and key. OpenRouter and DeepSeek are supported. Cleanup removes filler words, fixes punctuation and grammar, and formats emails while preserving the dictated intent — plus room to add your own custom instructions
 - **Secure API keys**: Groq and cleanup credentials are encrypted using a non-exportable Android Keystore key; existing Groq keys migrate from legacy app preferences on first access
 - **Voice commands**: say "Whisper Command" at the start of a recording to switch into command mode instead of normal dictation — see [Voice commands](#voice-commands) below
@@ -103,7 +103,7 @@ Off by default -- enable it under **Voice Commands** in the app, where you can a
 5. Optionally enable **Cleanup transcript** in Dictation settings. Tap **Cleanup provider** to use Groq or configure an OpenAI-compatible service. OpenRouter's default endpoint/model are prefilled; for DeepSeek use `https://api.deepseek.com/v1` with model `deepseek-chat`, then enter that provider's API key
 6. When prompted, allow OpenWispr to run **unrestricted by battery optimization** — otherwise Android may shut the background service down and the overlay will disappear until you reopen the app
 
-Cloud speech transcription always uses your Groq key and Groq Whisper Large V3. A separate cleanup provider/key affects transcript cleanup only.
+Cloud speech transcription always uses your Groq key and Groq Whisper Large V3 Turbo. A separate cleanup provider/key affects transcript cleanup only.
 
 Once setup is done, the floating button is ready.
 

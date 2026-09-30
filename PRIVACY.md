@@ -14,7 +14,7 @@ In local mode, audio is processed on-device using local speech recognition model
 
 In cloud mode, recorded audio is sent directly from the device to Groq's transcription API to generate text.
 
-If optional cleanup is enabled, the transcribed text is sent directly from the device to the selected cleanup provider's OpenAI-compatible chat completions API. Cleanup uses Groq by default; you can instead configure another HTTPS-compatible endpoint, such as OpenRouter or DeepSeek. Speech transcription remains on Groq Whisper Large V3 whenever cloud transcription is selected.
+If optional cleanup is enabled, the transcribed text is sent directly from the device to the selected cleanup provider's OpenAI-compatible chat completions API. Cleanup uses Groq by default; you can instead configure another HTTPS-compatible endpoint, such as OpenRouter or DeepSeek. Speech transcription remains on Groq Whisper Large V3 Turbo whenever cloud transcription is selected.
 
 ## API keys
 

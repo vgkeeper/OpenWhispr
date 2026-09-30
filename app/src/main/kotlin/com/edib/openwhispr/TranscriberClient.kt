@@ -12,7 +12,7 @@ object TranscriberClient {
     private val client = OkHttpClient()
 
     const val TRANSCRIPTION_URL = "https://api.groq.com/openai/v1/audio/transcriptions"
-    const val TRANSCRIPTION_MODEL = "whisper-large-v3"
+    const val TRANSCRIPTION_MODEL = "whisper-large-v3-turbo"
 
     fun parseResponse(json: String): Result = try {
         val obj = JSONObject(json)

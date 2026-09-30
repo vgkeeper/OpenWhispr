@@ -768,7 +768,7 @@ class MainActivity : AppCompatActivity() {
         }
         val dialog = android.app.AlertDialog.Builder(this)
             .setTitle("Cleanup provider")
-            .setMessage("Choose the chat API used only for transcript cleanup. Cloud speech transcription remains on Groq Whisper Large V3.")
+            .setMessage("Choose the chat API used only for transcript cleanup. Cloud speech transcription remains on Groq Whisper Large V3 Turbo.")
             .setView(container)
             .setPositiveButton("Save", null)
             .setNeutralButton("Clear cleanup API key", null)

@@ -85,8 +85,8 @@ class CleanupProviderConfigTest {
     }
 
     @Test
-    fun `transcription stays on Groq Whisper Large V3`() {
+    fun `transcription stays on Groq Whisper Large V3 Turbo`() {
         assertEquals("https://api.groq.com/openai/v1/audio/transcriptions", TranscriberClient.TRANSCRIPTION_URL)
-        assertEquals("whisper-large-v3", TranscriberClient.TRANSCRIPTION_MODEL)
+        assertEquals("whisper-large-v3-turbo", TranscriberClient.TRANSCRIPTION_MODEL)
     }
 }
