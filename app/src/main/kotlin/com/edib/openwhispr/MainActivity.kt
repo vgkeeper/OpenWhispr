@@ -15,6 +15,7 @@ import android.text.InputType
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -731,6 +732,7 @@ class MainActivity : AppCompatActivity() {
         val config = cleanupProviderConfig()
         val providers = CleanupProviderConfig.Provider.entries
         val providerPicker = Spinner(this).apply {
+            layoutParams = LinearLayout.LayoutParams(LP_MATCH, LP_WRAP)
             adapter = ArrayAdapter(
                 this@MainActivity,
                 android.R.layout.simple_spinner_item,
@@ -759,17 +761,22 @@ class MainActivity : AppCompatActivity() {
             textSize = 13f
             setTextColor(attrColor(android.R.attr.textColorSecondary))
         }
-        val container = vertical(dp(24), dp(8)).apply {
+        val container = vertical(0, 0).apply {
+            addView(TextView(this@MainActivity).apply {
+                text = "Choose the chat API used only for transcript cleanup. Cloud speech transcription remains on Groq Whisper Large V3 Turbo."
+                textSize = 14f
+                setTextColor(attrColor(android.R.attr.textColorSecondary))
+                setPadding(0, 0, 0, dp(8))
+            })
             addView(providerPicker)
             addView(baseUrl)
             addView(model)
             addView(apiKey)
-            addView(details)
+            addView(details.apply { setPadding(0, dp(8), 0, 0) })
         }
         val dialog = android.app.AlertDialog.Builder(this)
             .setTitle("Cleanup provider")
-            .setMessage("Choose the chat API used only for transcript cleanup. Cloud speech transcription remains on Groq Whisper Large V3 Turbo.")
-            .setView(container)
+            .setView(scrollableDialogContent(container))
             .setPositiveButton("Save", null)
             .setNeutralButton("Clear cleanup API key", null)
             .setNegativeButton("Cancel", null)
@@ -805,7 +812,7 @@ class MainActivity : AppCompatActivity() {
                 refresh()
             }
         }
-        dialog.show()
+        showResizingDialog(dialog)
     }
 
     private fun promptCustomInstructions() {
@@ -816,19 +823,29 @@ class MainActivity : AppCompatActivity() {
             hint = "e.g. always spell out \"NASA\" in full"
             inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
             minLines = 4
+            setHorizontallyScrolling(false)
             gravity = Gravity.TOP or Gravity.START
             setText(prefs().getString("custom_instructions", ""))
         }
-        android.app.AlertDialog.Builder(this)
+        val content = vertical(0, 0).apply {
+            addView(TextView(this@MainActivity).apply {
+                text = "These are appended to OpenWispr's built-in cleanup rules. They can't override its safety, formatting, or self-correction behavior."
+                textSize = 14f
+                setTextColor(attrColor(android.R.attr.textColorSecondary))
+                setPadding(0, 0, 0, dp(8))
+            })
+            addView(input)
+        }
+        val dialog = android.app.AlertDialog.Builder(this)
             .setTitle("Add custom instructions")
-            .setMessage("These are appended to OpenWispr's built-in cleanup rules. They can't override its safety, formatting, or self-correction behavior.")
-            .setView(input.apply { setPadding(dp(24), dp(8), dp(24), dp(8)) })
+            .setView(scrollableDialogContent(content))
             .setPositiveButton("Save") { _, _ ->
-                prefs().edit().putString("custom_instructions", input.text.toString().trim()).apply()
+                prefs().edit().putString("custom_instructions", input.text.toString()).apply()
                 refresh()
             }
             .setNegativeButton("Cancel", null)
-            .show()
+            .create()
+        showResizingDialog(dialog)
     }
 
     private fun promptTriggerPhrase() {
@@ -926,6 +943,17 @@ class MainActivity : AppCompatActivity() {
         setTypeface(typeface, Typeface.BOLD)
         setTextColor(attrColor(androidx.appcompat.R.attr.colorPrimary)) // Neutral Android-like blue
         setPadding(dp(24), dp(24), dp(24), dp(8))
+    }
+
+    private fun scrollableDialogContent(content: View) = ScrollView(this).apply {
+        isFillViewport = true
+        setPadding(dp(24), dp(8), dp(24), dp(8))
+        addView(content, ScrollView.LayoutParams(LP_MATCH, LP_WRAP))
+    }
+
+    private fun showResizingDialog(dialog: android.app.AlertDialog) {
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        dialog.show()
     }
 
     private fun vertical(padH: Int, padV: Int = padH) = LinearLayout(this).apply {

@@ -75,4 +75,12 @@ class PostProcessorTest {
                 result.error?.contains("must begin with '{'") == true
         )
     }
+
+    @Test
+    fun effectivePromptPreservesLongMultilineCustomInstructions() {
+        val customInstructions = (1..100).joinToString("\n") { "Keep formatting rule $it unchanged." }
+
+        assertTrue(PostProcessor.effectivePrompt(customInstructions).endsWith(customInstructions))
+    }
+
 }
