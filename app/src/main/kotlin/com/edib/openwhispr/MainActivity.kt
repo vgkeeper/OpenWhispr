@@ -18,6 +18,8 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
@@ -346,6 +348,19 @@ class MainActivity : AppCompatActivity() {
         settingsContainer.addView(bubbleSizePanel)
 
         settingsContainer.addView(sectionHeader("About"))
+
+        settingsContainer.addView(settingsRow(getString(R.string.language), getString(R.string.language_summary)) {
+            val languages = arrayOf(getString(R.string.english), getString(R.string.french))
+            val selected = if (AppCompatDelegate.getApplicationLocales().toLanguageTags().startsWith("fr")) 1 else 0
+            android.app.AlertDialog.Builder(this)
+                .setTitle(R.string.language)
+                .setSingleChoiceItems(languages, selected) { dialog, which ->
+                    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(if (which == 1) "fr" else "en"))
+                    dialog.dismiss()
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        })
 
         val versionName = try {
             packageManager.getPackageInfo(packageName, 0).versionName ?: "unknown"

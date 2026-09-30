@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OpenWispr</string>
+    <string name="accessibility_description">Dictée : enregistre l’audio, le transcrit et insère le texte dans le champ actif.</string>
+    <string name="notification_channel_name">Service en arrière-plan OpenWispr</string>
+    <string name="notification_channel_description">Maintient la fenêtre de dictée active en arrière-plan</string>
+    <string name="notification_content_title">OpenWispr est en cours d’exécution</string>
+    <string name="notification_content_text">Touchez le micro flottant pour dicter</string>
+    <string name="language">Langue</string>
+    <string name="language_summary">Choisir la langue de l’application</string>
+    <string name="english">Anglais</string>
+    <string name="french">Français</string>
+    <string name="cancel">Annuler</string>
+</resources>
