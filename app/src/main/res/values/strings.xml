@@ -44,4 +44,7 @@
     <string name="later">Later</string>
     <string name="update">Update</string>
     <string name="command_examples">Command examples</string>
+    <string name="process_text_label">Add to OpenWhisper dictionary</string>
+    <string name="dictionary_no_text">No selected text to add</string>
+    <string name="dictionary_saved">Dictionary saved</string>
 </resources>

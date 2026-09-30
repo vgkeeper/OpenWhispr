@@ -72,13 +72,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (intent?.action == Intent.ACTION_PROCESS_TEXT) {
-            val selected = intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString().orEmpty()
-            if (selected.isNotBlank()) {
-                Dictionary.save(prefs(), Dictionary.load(prefs()) + selected.trim())
-                Toast.makeText(this, getString(R.string.dictionary_added), Toast.LENGTH_SHORT).show()
-            }
-        }
 
         // Best-effort: lets the background service show its "still running"
         // notification (Android 13+ requires this permission for any
@@ -787,7 +780,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton(getString(R.string.save)) { _, _ ->
                 Dictionary.save(prefs(), Dictionary.parse(input.text.toString()))
                 WhisperAccessibilityService.instance?.reloadModel()
-                toast("Dictionary saved")
+                toast(getString(R.string.dictionary_saved))
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .create()
