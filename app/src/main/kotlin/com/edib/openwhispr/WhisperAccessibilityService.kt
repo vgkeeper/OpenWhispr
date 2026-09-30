@@ -400,7 +400,7 @@ class WhisperAccessibilityService : AccessibilityService() {
         val overlay = BubbleOverlay(this).apply {
             addView(ring, FrameLayout.LayoutParams(ringSize, ringSize, Gravity.CENTER))
             addView(img, FrameLayout.LayoutParams(buttonSize, buttonSize, Gravity.CENTER))
-            contentDescription = "OpenWhispr dictation bubble"
+            contentDescription = getString(R.string.overlay_content_description)
             setOnClickListener { onTap() }
             alpha = 0f
             visibility = View.INVISIBLE
@@ -618,7 +618,7 @@ class WhisperAccessibilityService : AccessibilityService() {
     private fun startRecording() {
         if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO)
             != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            toast("Grant audio permission in OpenWispr app"); return
+            toast(getString(R.string.grant_audio_in_app)); return
         }
 
         val bufSize = AudioRecord.getMinBufferSize(
@@ -629,7 +629,7 @@ class WhisperAccessibilityService : AccessibilityService() {
                 MediaRecorder.AudioSource.MIC, SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufSize
             )
-        } catch (_: SecurityException) { toast("Audio permission denied"); return }
+        } catch (_: SecurityException) { toast(getString(R.string.audio_permission_denied)); return }
 
         pcmStream = ByteArrayOutputStream()
         audioRecord!!.startRecording()
@@ -665,7 +665,7 @@ class WhisperAccessibilityService : AccessibilityService() {
         val pcm = pcmStream?.toByteArray() ?: ByteArray(0)
         pcmStream = null
 
-        if (pcm.isEmpty()) { reset("No audio captured"); return }
+        if (pcm.isEmpty()) { reset(getString(R.string.no_audio_captured)); return }
 
         val useLocal = prefs().getBoolean("use_local", true)
         val local = localTranscriber
@@ -697,7 +697,7 @@ class WhisperAccessibilityService : AccessibilityService() {
             } catch (e: Exception) {
                 Log.e(TAG, "Local transcription failed", e)
                 handler.post {
-                    toast("Local error: ${e.message}")
+                    toast(getString(R.string.local_error))
                     goIdle()
                 }
             }
@@ -707,14 +707,14 @@ class WhisperAccessibilityService : AccessibilityService() {
     private fun transcribeApi(pcm: ByteArray) {
         val wav = WavWriter.encode(pcm)
         val apiKey = SecureKeyStorage.groqApiKey(this)
-        if (apiKey.isBlank()) { reset("Set Groq API key in OpenWispr app"); return }
+        if (apiKey.isBlank()) { reset(getString(R.string.set_groq_key_in_app)); return }
 
         TranscriberClient.transcribe(wav, apiKey) { result ->
             if (result.text != null && result.text.isNotBlank()) {
                 handleTranscriptionResult(result.text)
             } else {
                 handler.post {
-                    toast("Error: ${result.error ?: "empty transcript"}")
+                    toast(getString(R.string.transcription_error))
                     goIdle()
                 }
             }
@@ -724,7 +724,7 @@ class WhisperAccessibilityService : AccessibilityService() {
     private fun handleTranscriptionResult(text: String?) {
         if (text.isNullOrBlank()) {
             handler.post {
-                toast("No speech detected")
+                toast(getString(R.string.no_speech))
                 goIdle()
             }
             return
@@ -753,7 +753,7 @@ class WhisperAccessibilityService : AccessibilityService() {
         if (usePostProcessing) {
             if (apiKey.isBlank()) {
                 handler.post {
-                    toast("Cleanup needs an API key. Using raw text.")
+                    toast(getString(R.string.cleanup_needs_key))
                     injectText(text)
                     goIdle()
                 }
@@ -761,7 +761,8 @@ class WhisperAccessibilityService : AccessibilityService() {
             }
 
             val customInstructions = prefs().getString("custom_instructions", "") ?: ""
-            val prompt = PostProcessor.effectivePrompt(customInstructions)
+            val vocabulary = Dictionary.load(prefs())
+            val prompt = PostProcessor.effectivePrompt(customInstructions, vocabulary)
 
             PostProcessor.process(text, prompt, apiKey, cleanupConfig) { result ->
                 handler.post {
@@ -769,11 +770,11 @@ class WhisperAccessibilityService : AccessibilityService() {
                     if (cleaned == "EMPTY") {
                         // Model correctly identified filler-only/no-speech audio;
                         // don't literally type the word "EMPTY" into the field.
-                        toast("No speech detected")
+                        toast(getString(R.string.no_speech))
                     } else if (!cleaned.isNullOrBlank()) {
                         injectText(cleaned)
                     } else {
-                        injectText(text, feedback = "Cleanup failed — raw copied to clipboard", feedbackDurationMs = 3000)
+                        injectText(text, feedback = getString(R.string.cleanup_failed_clipboard), feedbackDurationMs = 3000)
                     }
                     goIdle()
                 }
@@ -794,14 +795,14 @@ class WhisperAccessibilityService : AccessibilityService() {
         val apiKey = SecureKeyStorage.groqApiKey(this)
         if (apiKey.isBlank()) {
             handler.post {
-                toast("Voice commands need a Groq API key")
+                toast(getString(R.string.voice_commands_need_key))
                 goIdle()
             }
             return
         }
         if (instruction.isBlank()) {
             handler.post {
-                toast("No command heard after the trigger phrase")
+                toast(getString(R.string.no_command_after_trigger))
                 goIdle()
             }
             return
@@ -814,9 +815,9 @@ class WhisperAccessibilityService : AccessibilityService() {
                 val out = result.text?.trim()
                 when {
                     out.isNullOrBlank() ->
-                        toast("Command failed: ${result.error ?: "empty response"}")
+                        toast(getString(R.string.command_failed))
                     out == CommandProcessor.UNSUPPORTED ->
-                        toast("Command not recognized -- try summarize, translate, tone, or list")
+                        toast(getString(R.string.command_not_recognized))
                     else -> replaceFieldText(out)
                 }
                 goIdle()
@@ -858,7 +859,7 @@ class WhisperAccessibilityService : AccessibilityService() {
 
         Log.i(TAG, if (replaced) "Command replace succeeded" else "Command replace failed; clipboard fallback only")
         showFeedback(
-            if (replaced) "Command applied" else "Couldn't replace field -- copied to clipboard",
+            getString(if (replaced) R.string.command_applied else R.string.replace_failed_clipboard),
             if (replaced) 2000 else 3000
         )
     }
@@ -896,7 +897,7 @@ class WhisperAccessibilityService : AccessibilityService() {
 
     private fun injectText(
         text: String,
-        feedback: String? = "Copied to clipboard",
+        feedback: String? = getString(R.string.copied_to_clipboard),
         feedbackDurationMs: Long = 2000
     ) {
         val clip = ClipData.newPlainText("openwhispr", text)

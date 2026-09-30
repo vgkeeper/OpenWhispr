@@ -9,6 +9,11 @@ No internal/process notes (CI changes, release cleanup, repo housekeeping,
 etc.) -- if it wouldn't mean anything to someone who just installed the app,
 it doesn't belong here.
 
+## 3.11.0
+- Added clear attribution and separate source links for the VGKeeper-maintained Android fork and the original OpenWhispr project
+- Updated the in-app update check and APK downloads to use this fork's GitHub releases
+- Simplified text enhancement setup with Groq recommended and custom service options
+
 ## 3.10.0
 - Refreshed the app's look with Material 3 Expressive: a richer color palette and more expressive buttons, switches, and tabs
 - Smoother, springier animations across the settings screen

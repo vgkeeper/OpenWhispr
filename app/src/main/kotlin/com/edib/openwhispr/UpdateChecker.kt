@@ -16,8 +16,7 @@ object UpdateChecker {
 
     private val client = OkHttpClient()
     private const val CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000L // don't hammer GitHub on every app open
-    private const val RELEASES_URL =
-        "https://api.github.com/repos/EdiBianco/OpenWhispr/releases/latest"
+    private const val RELEASES_URL = ForkLinks.LATEST_RELEASE_API_URL
 
     // Matches the <!--WHATS_NEW_START-->...<!--WHATS_NEW_END--> block the
     // release workflow wraps around that version's CHANGELOG.md section, so
@@ -60,11 +59,15 @@ object UpdateChecker {
         val cachedNotes = prefs.getString("cached_update_notes", null)
 
         fun cachedResult(): UpdateInfo? =
-            if (cachedVersion != null && cachedUrl != null && isNewer(cachedVersion, currentVersion))
+            if (cachedVersion != null && cachedUrl != null && ForkLinks.isForkReleasePage(cachedUrl) &&
+                (cachedApkUrl == null || ForkLinks.isForkReleaseApk(cachedApkUrl)) &&
+                isNewer(cachedVersion, currentVersion)) {
                 UpdateInfo(cachedVersion, cachedUrl, cachedApkUrl, cachedNotes)
-            else null
+            } else null
 
-        if (!force && now - lastCheck < CHECK_INTERVAL_MS) {
+        if (!force && now - lastCheck < CHECK_INTERVAL_MS &&
+            (cachedUrl == null || (ForkLinks.isForkReleasePage(cachedUrl) &&
+                (cachedApkUrl == null || ForkLinks.isForkReleaseApk(cachedApkUrl))))) {
             callback(cachedResult())
             return
         }
@@ -81,6 +84,8 @@ object UpdateChecker {
                     val obj = JSONObject(body)
                     val tag = obj.optString("tag_name", "")
                     val url = obj.optString("html_url", "")
+                        .takeIf(ForkLinks::isForkReleasePage)
+                        ?: throw IOException("Release URL is not from the VGKeeper fork")
                     val releaseBody = obj.optString("body", "")
                     val notes = WHATS_NEW_REGEX.find(releaseBody)
                         ?.groupValues?.get(1)?.trim()?.takeIf { it.isNotBlank() }
@@ -92,7 +97,8 @@ object UpdateChecker {
                             val asset = assets.optJSONObject(i) ?: continue
                             val name = asset.optString("name", "")
                             if (name.endsWith(".apk")) {
-                                apkUrl = asset.optString("browser_download_url", null)
+                                apkUrl = asset.optString("browser_download_url", "")
+                                    .takeIf(ForkLinks::isForkReleaseApk)
                                 break
                             }
                         }

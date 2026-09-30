@@ -83,4 +83,21 @@ class PostProcessorTest {
         assertTrue(PostProcessor.effectivePrompt(customInstructions).endsWith(customInstructions))
     }
 
+    @Test
+    fun effectivePromptIncludesExactDictionarySpellingsAndNoBlindReplacement() {
+        val prompt = PostProcessor.effectivePrompt("", listOf("OpenWhisper", "McDonald’s", "NASA"))
+        assertTrue(prompt.contains("- OpenWhisper"))
+        assertTrue(prompt.contains("- McDonald’s"))
+        assertTrue(prompt.contains("- NASA"))
+        assertTrue(prompt.contains("exact spelling and capitalization"))
+        assertTrue(prompt.contains("Do not insert a dictionary term that was not spoken"))
+        assertTrue(prompt.contains("do not perform global text substitutions"))
+    }
+
+    @Test
+    fun effectivePromptDeduplicatesDictionaryTermsCaseInsensitively() {
+        val prompt = PostProcessor.effectivePrompt("", listOf("OpenWhisper", "openwhisper"))
+        assertEquals(1, Regex("- OpenWhisper").findAll(prompt).count())
+    }
+
 }

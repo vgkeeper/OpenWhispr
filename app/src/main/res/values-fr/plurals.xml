@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="dictionary_word_count">
+        <item quantity="one">%d mot</item>
+        <item quantity="other">%d mots</item>
+    </plurals>
+    <plurals name="setup_steps_ready">
+        <item quantity="one">%d étape de configuration sur 3 terminée</item>
+        <item quantity="other">%d étapes de configuration sur 3 terminées</item>
+    </plurals>
+</resources>

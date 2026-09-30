@@ -6,4 +6,111 @@
     <string name="notification_channel_description">Keeps the dictation overlay running in the background</string>
     <string name="notification_content_title">OpenWispr is running</string>
     <string name="notification_content_text">Tap the floating mic to dictate</string>
+    <string name="language">Language</string>
+    <string name="language_summary">Choose the app language</string>
+    <string name="english">English</string>
+    <string name="french">French</string>
+    <string name="cancel">Cancel</string>
+    <string name="dictionary_added">Added to dictionary</string>
+    <string name="tab_status">Status</string>
+    <string name="tab_dictation">Dictation</string>
+    <string name="tab_settings">Settings</string>
+    <string name="checking">Checking...</string>
+    <string name="audio_permission">Audio permission</string>
+    <string name="accessibility_service">OpenWispr dictation service</string>
+    <string name="battery_optimization">Battery optimization</string>
+    <string name="background_service">Background service</string>
+    <string name="background_service_summary">Pause the mic overlay without disabling accessibility</string>
+    <string name="local_models">Local models</string>
+    <string name="cloud_transcription">Use cloud transcription</string>
+    <string name="requires_groq_key">Requires Groq API key</string>
+    <string name="post_processing">Post-Processing</string>
+    <string name="voice_commands">Voice Commands</string>
+    <string name="custom_dictionary">Custom dictionary</string>
+    <string name="bubble_size">Bubble size</string>
+    <string name="about">About</string>
+    <string name="version">Version</string>
+    <string name="check_updates">Check for updates</string>
+    <string name="tap_check_now">Tap to check now</string>
+    <string name="download_starting">Starting download...</string>
+    <string name="extracting">Extracting...</string>
+    <string name="granted">Granted</string>
+    <string name="enabled">Enabled</string>
+    <string name="tap_grant_permission">Tap to grant permission</string>
+    <string name="tap_enable_settings">Tap to enable in settings</string>
+    <string name="setup_required">Setup required</string>
+    <string name="save">Save</string>
+    <string name="later">Later</string>
+    <string name="update">Update</string>
+    <string name="command_examples">Command examples</string>
+    <string name="process_text_label">Add to OpenWhisper dictionary</string>
+    <string name="dictionary_no_text">No selected text to add</string>
+    <string name="dictionary_saved">Dictionary saved</string>
+    <string name="setup">Setup</string><string name="engine">Engine</string><string name="accessibility_help">Needed to detect the focused text field and insert the cleaned-up text there.</string>
+    <string name="cleanup_provider">Cleanup service</string><string name="add_custom_instructions">Add custom instructions</string><string name="tap_add_refinements">Tap to add extra refinements</string>
+    <string name="trigger_phrase">Trigger phrase</string><string name="tap_to_change">Tap to change</string><string name="see_what_you_can_say">See what you can say</string>
+    <string name="add_dictionary_words">Add words used in transcription</string><string name="groq_api_key">Groq API Key</string><string name="tap_to_set">Tap to set</string>
+    <string name="floating_bubble">Floating dictation bubble</string><string name="github">GitHub</string><string name="view_source_releases">View source &amp; releases</string>
+    <string name="download_progress">Downloading: %1$d%%</string><string name="error_message">Download failed. Please try again.</string><string name="tap_collapse">Tap to collapse</string><string name="tap_review">Tap to review</string>
+    <string name="saved_securely">Saved securely</string><string name="ready_dictate">Ready — tap the overlay dot to dictate</string>
+    <string name="restricted_settings_title">One extra step on Android 13+</string><string name="open_accessibility_settings">Open Accessibility settings</string><string name="already_unrestricted">Already unrestricted</string>
+    <string name="update_available">Update available</string><string name="up_to_date">You’re up to date (v%1$s)</string><string name="allow_update_install">Allow installing updates</string>
+    <string name="update_install_help">To install updates in-app, allow OpenWispr to install unknown apps on the next screen, then come back and tap Update again.</string><string name="continue_action">Continue</string>
+    <string name="downloading_update">Downloading update…</string><string name="download_failed">Update download failed. Please try again.</string><string name="installer_failed">Couldn’t start the installer. Try opening the downloaded APK manually.</string>
+    <string name="keep_dictation_running">Keep dictation running</string><string name="dictionary_hint">One word or phrase per line</string>
+    <string name="dictionary_help">Saved on this device. Hotword boosting works with sherpa-onnx transducer models; cloud cleanup uses these as spelling references.</string>
+    <string name="api_key_hint">API key (stored encrypted)</string><string name="cleanup_provider_help">After you dictate, OpenWispr corrects recognition mistakes, punctuation, and formatting. Groq is recommended.</string>
+    <string name="invalid_cleanup_url">Invalid cleanup base URL</string><string name="cleanup_key_cleared">Cleanup API key cleared</string>
+    <string name="custom_instructions_help">These are appended to OpenWispr’s built-in cleanup rules. They can’t override its safety, formatting, or self-correction behavior.</string>
+    <string name="trigger_phrase_help">Say this phrase at the start of a recording to switch into command mode instead of normal dictation.</string>
+    <string name="restricted_settings_help">Android blocks this permission by default for apps installed outside the Play Store — that’s normal, not a bug.\n\nIf the Accessibility toggle looks greyed out or won’t switch on:\n1. Long-press the OpenWispr icon → App info\n2. Tap the ⋮ menu (top right) → “Allow restricted settings”\n3. Come back and enable Accessibility as usual</string>
+    <string name="update_available_message">OpenWispr %1$s is available. You’re on %2$s.%3$s</string><string name="whats_new">\n\nWhat’s new:\n</string>
+    <string name="open_browser_failed">Couldn’t open a browser on this device.</string><string name="open_settings_failed">Couldn’t open system settings on this device.</string><string name="battery_settings_failed">Couldn’t open battery settings on this device.</string>
+    <string name="battery_warning_message">Android’s battery saver can shut down OpenWispr’s background service to save power, which makes the mic overlay disappear until you reopen the app.\n\nAllow it to run unrestricted so it stays available.\n\nOn some phones (Samsung, Xiaomi, OnePlus, and others) you may also need to allow “autostart” or remove OpenWispr from any battery/app-sleep manager in your phone’s own settings, separately from the Android dialog this opens.</string>
+    <string name="disable_restrictions">Disable restrictions</string><string name="api_key_help_html">Don’t have one? Get a free key at &lt;a href="https://console.groq.com/keys"&gt;console.groq.com/keys&lt;/a&gt;</string>
+    <string name="api_key_placeholder">gsk_...</string><string name="openrouter_url_placeholder">https://openrouter.ai/api/v1</string>
+    <string name="openrouter_help">OpenRouter uses the default URL and model above. For DeepSeek, set the URL to https://api.deepseek.com/v1 and model to deepseek-chat. Use an HTTPS base URL ending in /v1 or /chat/completions.</string>
+    <string name="cleanup_api_key_cleared">Cleanup API key cleared</string><string name="custom_instructions_placeholder">e.g. always spell out “NASA” in full</string>
+    <string name="trigger_phrase_placeholder">Whisper Command</string><string name="api_key_title">Groq API Key</string>
+    <string name="cleanup_provider_title">Cleanup service</string><string name="clear_cleanup_key">Clear cleanup API key</string>
+    <string name="provider_groq_openai">Custom service (OpenAI-compatible, including OpenRouter and DeepSeek)</string>
+    <string name="command_mode_help">Say this phrase at the start of a recording to switch into command mode instead of normal dictation.</string>
+    <string name="grant_audio_in_app">Grant audio permission in OpenWispr app</string><string name="audio_permission_denied">Audio permission denied</string><string name="local_error">On-device transcription failed. Please try again.</string>
+    <string name="transcription_error">Transcription failed. Please try again.</string><string name="no_speech">No speech detected</string><string name="cleanup_needs_key">Cleanup needs an API key. Using raw text.</string>
+    <string name="voice_commands_need_key">Voice commands need a Groq API key</string><string name="no_command_after_trigger">No command heard after the trigger phrase</string>
+    <string name="command_failed">The voice command failed. Please try again.</string><string name="command_not_recognized">Command not recognized — try summarize, translate, tone, or list</string>
+    <string name="bubble_size_help">%1$d%% (smallest) to %2$d%% (largest); %3$d%% is standard. Changes apply immediately.</string><string name="model_ready">%1$s ready!</string><string name="model_size">%1$s · %2$d MB</string><string name="quoted_phrase">“%1$s”</string><string name="groq_chat_api">Groq Chat API</string>
+    <string name="command_examples_body">Say the trigger phrase, then one of these — applies to whatever’s already in the field, or to text you dictate right after the command:\n\n• “%1$s, summarize this in two sentences”\n• “%1$s, enhance the flow”\n• “%1$s, translate to Italian”\n• “%1$s, make this more formal”\n• “%1$s, turn this into a list”\n\nYou can chain commands: “%1$s, translate to Italian and turn it into a list” applies them in order.</string><string name="got_it">Got it</string>
+    <string name="cleanup_key_saved">API key saved securely</string><string name="cleanup_key_needed">API key needed</string><string name="unknown_error">unknown error</string><string name="empty_transcript">empty transcript</string><string name="empty_response">empty response</string>
+    <string name="best_value">★★★ Best value</string><string name="best_quality">★★★★ Best quality</string><string name="fast_model">★★☆ Fast</string>
+    <string name="command_applied">Command applied</string><string name="replace_failed_clipboard">Couldn’t replace field — copied to clipboard</string><string name="copied_to_clipboard">Copied to clipboard</string><string name="cleanup_failed_clipboard">Cleanup failed — raw copied to clipboard</string>
+    <string name="voice_commands_summary">Say a trigger phrase to translate, summarize, and more</string><string name="bubble_size_accessibility">Floating dictation bubble size</string>
+    <string name="bubble_standard">standard</string><string name="bubble_smaller">smaller</string><string name="bubble_larger">larger</string><string name="bubble_standard_accessibility">standard size</string><string name="bubble_smaller_accessibility">smaller than standard</string><string name="bubble_larger_accessibility">larger than standard</string>
+    <string name="battery_unrestricted">Unrestricted — won’t be shut down to save battery</string><string name="battery_allow_background">Tap to allow background activity (recommended)</string>
+    <string name="provider_summary">%1$s · %2$s</string>
+    <string name="overlay_content_description">OpenWispr dictation bubble</string><string name="no_audio_captured">No audio captured</string><string name="set_groq_key_in_app">Set Groq API key in OpenWispr app</string>
+    <string name="groq_provider">Groq</string>
+    <string name="percent_unit">percent</string>
+    <string name="text_enhancement">Text enhancement</string>
+    <string name="text_enhancement_help">After you dictate, OpenWispr corrects recognition mistakes, punctuation, and formatting. Groq is recommended and uses the Groq key saved in Settings. Choose Custom service to use OpenRouter, DeepSeek, or another compatible service.</string>
+    <string name="cleanup_transcript">Improve text</string>
+    <string name="cleanup_service">Cleanup service</string>
+    <string name="groq_recommended">Groq (recommended)</string>
+    <string name="custom_service">Custom service</string>
+    <string name="choose_cleanup_provider">Groq is recommended and uses the key saved in Settings. Choose Custom service to connect OpenRouter, DeepSeek, or another compatible service.</string>
+    <string name="custom_service_help">Enter the connection details and key provided by your chosen service. OpenRouter and DeepSeek are examples of compatible services.</string>
+    <string name="custom_service_url">Service API URL</string>
+    <string name="custom_service_model">Model name</string>
+    <string name="custom_service_key">API key for this service</string>
+    <string name="cleanup_service_groq_ready">Groq (recommended)</string>
+    <string name="cleanup_service_groq_setup">Groq (recommended) · Add your Groq key in Settings</string>
+    <string name="cleanup_service_custom_ready">Custom service · Configured</string>
+    <string name="cleanup_service_custom_setup">Custom service · Add its key</string>
+    <string name="fork_about_summary">OpenWispr for Android is maintained by VGKeeper. It is a fork based on the open-source OpenWhispr project.</string>
+    <string name="current_source_code">Code source for this version</string>
+    <string name="current_source_code_summary">VGKeeper/OpenWhispr</string>
+    <string name="original_project">Original OpenWhispr project</string>
+    <string name="original_project_summary">Open-source upstream project</string>
+    <string name="project_license">License</string>
+    <string name="project_license_summary">Apache License 2.0</string>
 </resources>

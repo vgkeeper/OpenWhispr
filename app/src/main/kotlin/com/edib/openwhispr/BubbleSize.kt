@@ -53,16 +53,27 @@ object BubbleSize {
         )
     }
 
-    fun valueLabel(percent: Int): String = when (percent) {
-        DEFAULT_PERCENT -> "$percent% · standard"
-        in MIN_PERCENT until DEFAULT_PERCENT -> "$percent% · smaller"
-        else -> "$percent% · larger"
+    fun valueLabel(
+        percent: Int,
+        standard: String = "standard",
+        smaller: String = "smaller",
+        larger: String = "larger",
+    ): String = when (percent) {
+        DEFAULT_PERCENT -> "$percent% · $standard"
+        in MIN_PERCENT until DEFAULT_PERCENT -> "$percent% · $smaller"
+        else -> "$percent% · $larger"
     }
 
-    fun accessibilityDescription(percent: Int): String = when (percent) {
-        DEFAULT_PERCENT -> "$percent percent, standard size"
-        in MIN_PERCENT until DEFAULT_PERCENT -> "$percent percent, smaller than standard"
-        else -> "$percent percent, larger than standard"
+    fun accessibilityDescription(
+        percent: Int,
+        standard: String = "standard size",
+        smaller: String = "smaller than standard",
+        larger: String = "larger than standard",
+        percentUnit: String = "percent",
+    ): String = when (percent) {
+        DEFAULT_PERCENT -> "$percent $percentUnit, $standard"
+        in MIN_PERCENT until DEFAULT_PERCENT -> "$percent $percentUnit, $smaller"
+        else -> "$percent $percentUnit, $larger"
     }
 
     fun clampPosition(

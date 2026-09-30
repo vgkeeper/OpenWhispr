@@ -22,6 +22,9 @@ It supports:
 - **Optional AI cleanup**: Groq (`openai/gpt-oss-120b`) by default, or any OpenAI-compatible chat completions API with a custom HTTPS base URL, model, and key. OpenRouter and DeepSeek are supported. Cleanup removes filler words, fixes punctuation and grammar, and formats emails while preserving the dictated intent — plus room to add your own custom instructions
 - **Secure API keys**: Groq and cleanup credentials are encrypted using a non-exportable Android Keystore key; existing Groq keys migrate from legacy app preferences on first access
 - **Voice commands**: say "Whisper Command" at the start of a recording to switch into command mode instead of normal dictation — see [Voice commands](#voice-commands) below
+- **Custom dictionary**: add, edit, and remove vocabulary in Settings. sherpa-onnx transducer models receive these terms as hotwords; transcript cleanup also receives them as spelling references and is instructed to preserve their exact spelling and capitalization.
+- **Add selected text**: select text in another app and choose **Add to OpenWhisper dictionary** from Android's text-action menu. Android and individual apps may put third-party `PROCESS_TEXT` actions under the overflow (`…`) or omit them when text actions are unsupported; this is controlled by the host app/system, not OpenWispr.
+- **App language**: choose English or French in Settings. The choice persists across launches; the same languages are exposed in Android's per-app language settings where supported.
 - **Multilingual**: works across languages for both transcription and cleanup
 - **Smart overlay visibility**: the mic overlay shows only while a text field is focused, fading in/out, using three redundant signals (accessibility focus events, a periodic focus poll, and system keyboard visibility) so it still shows up in apps with non-standard text composers (e.g. WhatsApp, Telegram)
 - **Stability**: hardened against crashes and killed background services, with a toggle to pause dictation without touching the Accessibility permission
@@ -29,6 +32,10 @@ It supports:
 - **In-app updates**: the app checks this repo's GitHub Releases on open (plus a manual "Check for updates" row in Settings) and installs updates entirely in-app — it downloads the .apk itself and hands it straight to the system installer, no browser involved, with a short "what's new" summary for each release (see [CHANGELOG.md](CHANGELOG.md))
 - **Organized settings**: Status / Dictation / Settings tabs, with a collapsible setup checklist (Audio, Accessibility, Battery) that folds away once everything's green
 - **Restricted settings help**: on Android 13+, sideloaded apps have the Accessibility toggle blocked by default with no explanation — the app walks you through unlocking it before sending you to the system screen
+
+## Fork and upstream identity
+
+This is the VGKeeper-maintained Android fork of the open-source [OpenWhispr project](https://github.com/EdiBianco/OpenWhispr). The app keeps the original project’s license and attribution notices; see [LICENSE](LICENSE). The upstream repository currently identifies its license as Apache-2.0.
 
 ## Why I built this
 
@@ -40,7 +47,7 @@ That codebase was [kafkasl/phone-whisper](https://github.com/kafkasl/phone-whisp
 
 ### Easiest: download the APK
 
-Grab the latest debug APK from the [Releases page](https://github.com/EdiBianco/OpenWhispr/releases) on this fork. A [GitHub Actions workflow](.github/workflows/build-apk.yml) builds and publishes a new version-tagged release automatically on every push to `main`.
+Grab the latest debug APK from the [Releases page](https://github.com/vgkeeper/OpenWhispr/releases) for the VGKeeper-maintained fork. A [GitHub Actions workflow](.github/workflows/build-apk.yml) builds a debug APK for validation; on a release push to `main`, it publishes the versioned APK to this fork's GitHub Releases.
 
 Open it on your phone, install it, then launch the app once to finish setup.
 
@@ -53,7 +60,7 @@ The [APK workflow](.github/workflows/build-apk.yml) runs tests, Android lint, an
 Requires JDK 17 and Android SDK.
 
 ```bash
-git clone https://github.com/EdiBianco/OpenWhispr.git && cd OpenWhispr
+git clone https://github.com/vgkeeper/OpenWhispr.git && cd OpenWhispr
 make build
 ```
 
@@ -174,6 +181,8 @@ make clean       # clean build artifacts
 OpenWispr works best in apps that use standard Android text fields.
 Some apps use custom text surfaces or terminal-style views, which may not support direct accessibility paste.
 When insertion is not possible, OpenWispr falls back to copying the transcript to the clipboard.
+
+Android requires the `PROPERTY_SPECIAL_USE_FGS_SUBTYPE` manifest property to be a locale-invariant literal (Android lint rejects locale-qualified values there). The technical foreground-service subtype shown by the OS therefore remains the app's service identifier; in-app UI, notification text, accessibility label/description, and the native text-action label are localized.
 
 ### Termux
 
