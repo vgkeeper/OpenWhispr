@@ -948,7 +948,7 @@ class MainActivity : AppCompatActivity() {
     private fun scrollableDialogContent(content: View) = ScrollView(this).apply {
         isFillViewport = true
         setPadding(dp(24), dp(8), dp(24), dp(8))
-        addView(content, ScrollView.LayoutParams(LP_MATCH, LP_WRAP))
+        addView(content, FrameLayout.LayoutParams(LP_MATCH, LP_WRAP))
     }
 
     private fun showResizingDialog(dialog: android.app.AlertDialog) {
