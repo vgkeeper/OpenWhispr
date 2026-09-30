@@ -43,8 +43,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var setupCollapsedRowSub: TextView
     private lateinit var setupDoneSummary: TextView
     private lateinit var keyRowSub: TextView
+    private lateinit var cleanupProviderRowSub: TextView
     private lateinit var customInstructionsRowSub: TextView
     private lateinit var customInstructionsRow: LinearLayout
+    private lateinit var cleanupProviderRow: LinearLayout
     private lateinit var modelContainer: LinearLayout
     private lateinit var voiceCommandsDetailContainer: LinearLayout
     private lateinit var triggerPhraseRowSub: TextView
@@ -220,13 +222,19 @@ class MainActivity : AppCompatActivity() {
             isChecked = isPostProcessing
             isClickable = false
         }
-        val postProcessRow = settingsRow("Cleanup transcript", "Uses Groq Chat API to fix grammar and punctuation", postProcessSwitch) {
+        val postProcessRow = settingsRow("Cleanup transcript", "Uses the selected chat provider to clean text", postProcessSwitch) {
             val newVal = !postProcessSwitch.isChecked
             prefs().edit().putBoolean("use_post_processing", newVal).apply()
             postProcessSwitch.isChecked = newVal
             refresh()
         }
         dictationContainer.addView(postProcessRow)
+
+        cleanupProviderRow = settingsRow("Cleanup provider", "Groq Chat API") {
+            promptCleanupProvider()
+        }
+        cleanupProviderRowSub = cleanupProviderRow.findViewWithTag("subtitle")
+        dictationContainer.addView(cleanupProviderRow)
 
         customInstructionsRow = settingsRow("Add custom instructions", "Tap to add extra refinements") {
             promptCustomInstructions()
@@ -437,7 +445,12 @@ class MainActivity : AppCompatActivity() {
         val acc = WhisperAccessibilityService.instance != null
         val useLocal = prefs().getBoolean("use_local", true)
         val usePostProcessing = prefs().getBoolean("use_post_processing", false)
-        val hasKey = !prefs().getString("api_key", "").isNullOrBlank()
+        val groqApiKey = SecureKeyStorage.groqApiKey(this)
+        val cleanupConfig = cleanupProviderConfig()
+        val cleanupApiKey = if (cleanupConfig.provider == CleanupProviderConfig.Provider.GROQ)
+            groqApiKey else SecureKeyStorage.cleanupApiKey(this)
+        val hasGroqKey = groqApiKey.isNotBlank()
+        val hasCleanupKey = cleanupApiKey.isNotBlank()
         val hasModel = LocalTranscriber.availableModels(this).isNotEmpty()
         val unrestricted = isIgnoringBatteryOptimizations()
 
@@ -472,15 +485,14 @@ class MainActivity : AppCompatActivity() {
 
         modelContainer.visibility = if (useLocal) View.VISIBLE else View.GONE
         customInstructionsRow.visibility = if (usePostProcessing) View.VISIBLE else View.GONE
+        cleanupProviderRow.visibility = if (usePostProcessing) View.VISIBLE else View.GONE
+        cleanupProviderRowSub.text = cleanupProviderSummary()
 
         val voiceCommandsEnabled = prefs().getBoolean("voice_commands_enabled", false)
         voiceCommandsDetailContainer.visibility = if (voiceCommandsEnabled) View.VISIBLE else View.GONE
         triggerPhraseRowSub.text = "\"${prefs().getString("command_trigger_phrase", "Whisper Command")}\""
 
-        val apiKey = prefs().getString("api_key", "") ?: ""
-        keyRowSub.text = if (apiKey.isBlank()) "Tap to set"
-                         else if (apiKey.length > 7) "gsk_...${apiKey.takeLast(4)}"
-                         else "gsk_...***"
+        keyRowSub.text = if (hasGroqKey) "Saved securely" else "Tap to set"
 
         val customInstructions = prefs().getString("custom_instructions", "") ?: ""
         customInstructionsRowSub.text = if (customInstructions.isBlank())
@@ -496,8 +508,8 @@ class MainActivity : AppCompatActivity() {
 
         // Ready logic
         val localReady = useLocal && hasModel
-        val cloudReady = !useLocal && hasKey
-        val postReady = !usePostProcessing || hasKey
+        val cloudReady = !useLocal && hasGroqKey
+        val postReady = !usePostProcessing || hasCleanupKey
         val ready = audio && acc && (localReady || cloudReady) && postReady
 
         statusSubtitle.text = if (ready) "Ready — tap the overlay dot to dictate" else "Setup required"
@@ -695,7 +707,10 @@ class MainActivity : AppCompatActivity() {
         }
         val input = EditText(this).apply {
             hint = "gsk_..."
-            setText(prefs().getString("api_key", ""))
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            isSaveEnabled = false
+            importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
+            setText(SecureKeyStorage.groqApiKey(this@MainActivity))
         }
         val container = vertical(dp(24), dp(8)).apply {
             addView(link)
@@ -705,11 +720,92 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Groq API Key")
             .setView(container)
             .setPositiveButton("Save") { _, _ ->
-                prefs().edit().putString("api_key", input.text.toString().trim()).apply()
+                SecureKeyStorage.saveGroqApiKey(this, input.text.toString().trim())
                 refresh()
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun promptCleanupProvider() {
+        val config = cleanupProviderConfig()
+        val providers = CleanupProviderConfig.Provider.entries
+        val providerPicker = Spinner(this).apply {
+            adapter = ArrayAdapter(
+                this@MainActivity,
+                android.R.layout.simple_spinner_item,
+                listOf("Groq", "OpenAI-compatible (OpenRouter, DeepSeek, etc.)"),
+            ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+            setSelection(providers.indexOf(config.provider))
+        }
+        val baseUrl = EditText(this).apply {
+            hint = "https://openrouter.ai/api/v1"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
+            setText(config.baseUrl)
+        }
+        val model = EditText(this).apply {
+            hint = CleanupProviderConfig.DEFAULT_MODEL
+            setText(config.model)
+        }
+        val apiKey = EditText(this).apply {
+            hint = "API key (stored encrypted)"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            isSaveEnabled = false
+            importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
+            setText(SecureKeyStorage.cleanupApiKey(this@MainActivity))
+        }
+        val details = TextView(this).apply {
+            text = "OpenRouter uses the default URL and model above. For DeepSeek, set the URL to https://api.deepseek.com/v1 and model to deepseek-chat. Use an HTTPS base URL ending in /v1 or /chat/completions."
+            textSize = 13f
+            setTextColor(attrColor(android.R.attr.textColorSecondary))
+        }
+        val container = vertical(dp(24), dp(8)).apply {
+            addView(providerPicker)
+            addView(baseUrl)
+            addView(model)
+            addView(apiKey)
+            addView(details)
+        }
+        val dialog = android.app.AlertDialog.Builder(this)
+            .setTitle("Cleanup provider")
+            .setMessage("Choose the chat API used only for transcript cleanup. Cloud speech transcription remains on Groq Whisper Large V3.")
+            .setView(container)
+            .setPositiveButton("Save", null)
+            .setNeutralButton("Clear cleanup API key", null)
+            .setNegativeButton("Cancel", null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val selectedProvider = providers[providerPicker.selectedItemPosition]
+                val nextConfig = CleanupProviderConfig(
+                    provider = selectedProvider,
+                    baseUrl = baseUrl.text.toString().trim().ifBlank { CleanupProviderConfig.DEFAULT_BASE_URL },
+                    model = model.text.toString().trim().ifBlank { CleanupProviderConfig.DEFAULT_MODEL },
+                )
+                try {
+                    nextConfig.chatCompletionsUrl()
+                } catch (e: IllegalArgumentException) {
+                    toast(e.message ?: "Invalid cleanup base URL")
+                    return@setOnClickListener
+                }
+                prefs().edit()
+                    .putString("cleanup_provider", selectedProvider.preferenceValue)
+                    .putString("cleanup_base_url", nextConfig.baseUrl)
+                    .putString("cleanup_model", nextConfig.model)
+                    .apply()
+                apiKey.text.toString().trim().takeIf { it.isNotBlank() }
+                    ?.let { SecureKeyStorage.saveCleanupApiKey(this, it) }
+                dialog.dismiss()
+                refresh()
+            }
+            dialog.getButton(android.app.AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                SecureKeyStorage.saveCleanupApiKey(this, "")
+                apiKey.text.clear()
+                toast("Cleanup API key cleared")
+                refresh()
+            }
+        }
+        dialog.show()
     }
 
     private fun promptCustomInstructions() {
@@ -857,6 +953,22 @@ class MainActivity : AppCompatActivity() {
         ta.recycle()
         return color
     }
+    private fun cleanupProviderConfig() = CleanupProviderConfig.fromPreferences(
+        prefs().getString("cleanup_provider", null),
+        prefs().getString("cleanup_base_url", null),
+        prefs().getString("cleanup_model", null),
+    )
+
+    private fun cleanupProviderSummary(): String {
+        val config = cleanupProviderConfig()
+        val configured = when (config.provider) {
+            CleanupProviderConfig.Provider.GROQ -> SecureKeyStorage.groqApiKey(this).isNotBlank()
+            CleanupProviderConfig.Provider.OPENAI_COMPATIBLE -> SecureKeyStorage.cleanupApiKey(this).isNotBlank()
+        }
+        val endpoint = if (config.provider == CleanupProviderConfig.Provider.GROQ) "Groq" else config.model
+        return "$endpoint · ${if (configured) "API key saved securely" else "API key needed"}"
+    }
+
     private fun prefs() = getSharedPreferences("openwhispr", MODE_PRIVATE)
     private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 

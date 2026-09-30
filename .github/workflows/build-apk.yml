@@ -74,7 +74,7 @@ jobs:
           name: OpenWispr v${{ steps.version.outputs.version }}
           body: |
             Free, open-source push-to-talk dictation for Android. Debug build from commit `${{ github.sha }}`.
-            Transcription + cleanup via Groq (`whisper-large-v3` + `openai/gpt-oss-120b`) with your own API key, or fully on-device with no key or internet needed.
+            Cloud transcription via Groq Whisper Large V3, with cleanup through Groq or a configurable OpenAI-compatible provider; local transcription is also available.
 
             **What's new:**
             <!--WHATS_NEW_START-->
