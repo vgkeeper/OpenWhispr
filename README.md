@@ -46,7 +46,7 @@ Open it on your phone, install it, then launch the app once to finish setup.
 
 ### CI and Telegram delivery
 
-The [APK workflow](.github/workflows/build-apk.yml) runs tests, Android lint, and a debug build on trusted pushes to `main` and `feat/cleanup-openai-compatible`, or via manual dispatch. After a successful build, it sends the versioned APK as a Telegram document to the configured chat. GitHub Actions requires the repository secret `TELEGRAM_BOT_TOKEN` and variable `TELEGRAM_CHAT_ID`. Do not add `pull_request` or `pull_request_target` triggers to this workflow: external pull requests must not receive the Telegram credential. A push to `main` also runs the existing GitHub Release job; manual dispatch skips release publication.
+The [APK workflow](.github/workflows/build-apk.yml) runs tests, Android lint, and a debug build on trusted pushes to `main` and `feat/cleanup-openai-compatible`, or via manual dispatch. After a successful build, it sends the versioned APK as a Telegram document to the configured chat. GitHub Actions requires the repository secret `TELEGRAM_BOT_TOKEN` and variable `TELEGRAM_CHAT_ID`. Do not add `pull_request` or `pull_request_target` triggers to this workflow: external pull requests must not receive the Telegram credential. A push to `main` also runs the existing GitHub Release job; manual dispatch skips release publication. To verify automatic triggering, inspect that a run caused by a main-branch change has event `push`; a manual dispatch verifies the build/delivery pipeline but not the push trigger.
 
 ### Build from source
 
