@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
         statusContainer.addView(accRow)
 
         accCaption = TextView(this).apply {
-            text = "Needed to detect the focused text field and insert the cleaned-up text there."
+            text = getString(R.string.accessibility_help)
             textSize = 12f
             setTextColor(attrColor(android.R.attr.textColorSecondary))
             alpha = 0.8f
@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity() {
 
         // ================= Dictation tab =================
 
-        dictationContainer.addView(sectionHeader("Engine"))
+        dictationContainer.addView(sectionHeader(getString(R.string.engine)))
 
         val isCloud = !prefs().getBoolean("use_local", true)
         val cloudSwitch = MaterialSwitch(this).apply {
@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity() {
             isChecked = isPostProcessing
             isClickable = false
         }
-        val postProcessRow = settingsRow(getString(R.string.cleanup_transcript), "Uses the selected chat provider to clean text", postProcessSwitch) {
+        val postProcessRow = settingsRow(getString(R.string.cleanup_transcript), getString(R.string.cleanup_provider_help), postProcessSwitch) {
             val newVal = !postProcessSwitch.isChecked
             prefs().edit().putBoolean("use_post_processing", newVal).apply()
             postProcessSwitch.isChecked = newVal
@@ -234,13 +234,13 @@ class MainActivity : AppCompatActivity() {
         }
         dictationContainer.addView(postProcessRow)
 
-        cleanupProviderRow = settingsRow("Cleanup provider", "Groq Chat API") {
+        cleanupProviderRow = settingsRow(getString(R.string.cleanup_provider), "Groq Chat API") {
             promptCleanupProvider()
         }
         cleanupProviderRowSub = cleanupProviderRow.findViewWithTag("subtitle")
         dictationContainer.addView(cleanupProviderRow)
 
-        customInstructionsRow = settingsRow("Add custom instructions", "Tap to add extra refinements") {
+        customInstructionsRow = settingsRow(getString(R.string.add_custom_instructions), getString(R.string.tap_add_refinements)) {
             promptCustomInstructions()
         }
         customInstructionsRowSub = customInstructionsRow.findViewWithTag("subtitle")
@@ -269,11 +269,11 @@ class MainActivity : AppCompatActivity() {
 
         voiceCommandsDetailContainer = vertical(0)
 
-        val triggerPhraseRow = settingsRow("Trigger phrase", "Tap to change") { promptTriggerPhrase() }
+        val triggerPhraseRow = settingsRow(getString(R.string.trigger_phrase), getString(R.string.tap_to_change)) { promptTriggerPhrase() }
         triggerPhraseRowSub = triggerPhraseRow.findViewWithTag("subtitle")
         voiceCommandsDetailContainer.addView(triggerPhraseRow)
 
-        val examplesRow = settingsRow(getString(R.string.command_examples), "See what you can say") { showCommandExamples() }
+        val examplesRow = settingsRow(getString(R.string.command_examples), getString(R.string.see_what_you_can_say)) { showCommandExamples() }
         voiceCommandsDetailContainer.addView(examplesRow)
 
         dictationContainer.addView(voiceCommandsDetailContainer)
@@ -281,13 +281,13 @@ class MainActivity : AppCompatActivity() {
         // ================= Settings tab =================
 
         settingsContainer.addView(sectionHeader(getString(R.string.tab_settings)))
-        settingsContainer.addView(settingsRow(getString(R.string.custom_dictionary), Dictionary.load(prefs()).let { if (it.isEmpty()) "Add words used in transcription" else "${it.size} words" }) { promptDictionary() })
+        settingsContainer.addView(settingsRow(getString(R.string.custom_dictionary), Dictionary.load(prefs()).let { if (it.isEmpty()) getString(R.string.add_dictionary_words) else getString(R.string.word_count, it.size) }) { promptDictionary() })
 
-        val keyRow = settingsRow("Groq API Key", "Tap to set") { promptApiKey() }
+        val keyRow = settingsRow(getString(R.string.groq_api_key), getString(R.string.tap_to_set)) { promptApiKey() }
         keyRowSub = keyRow.findViewWithTag("subtitle")
         settingsContainer.addView(keyRow)
 
-        settingsContainer.addView(sectionHeader("Floating dictation bubble"))
+        settingsContainer.addView(sectionHeader(getString(R.string.floating_bubble)))
         val bubbleSizePanel = vertical(dp(24), dp(8))
         val bubbleSizeLabel = TextView(this).apply {
             text = getString(R.string.bubble_size)
@@ -362,7 +362,7 @@ class MainActivity : AppCompatActivity() {
         }
         settingsContainer.addView(settingsRow(getString(R.string.version), versionName))
 
-        settingsContainer.addView(settingsRow("GitHub", "View source & releases") {
+        settingsContainer.addView(settingsRow(getString(R.string.github), getString(R.string.view_source_releases)) {
             try {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/EdiBianco/OpenWhispr")))
             } catch (e: Exception) {
@@ -466,7 +466,7 @@ class MainActivity : AppCompatActivity() {
                 when (state) {
                     is DownloadState.Downloading -> {
                         views.progress.progress = (state.progress * 100).toInt()
-                        views.subtitle.text = "Downloading: ${(state.progress * 100).toInt()}%"
+                        views.subtitle.text = getString(R.string.download_progress, (state.progress * 100).toInt())
                     }
                     is DownloadState.Extracting -> {
                         views.progress.isIndeterminate = true
@@ -479,7 +479,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     is DownloadState.Error -> {
                         views.progress.visibility = View.GONE
-                        views.subtitle.text = "Error: ${state.message}"
+                        views.subtitle.text = getString(R.string.error_message, state.message)
                         views.dlBtn.isEnabled = true
                     }
                 }
@@ -537,10 +537,10 @@ class MainActivity : AppCompatActivity() {
         val doneCount = listOf(audio, acc, unrestricted).count { it }
 
         setupCollapsedRow.visibility = if (allOk) View.VISIBLE else View.GONE
-        setupCollapsedRowSub.text = if (setupExpanded) "Tap to collapse" else "Tap to review"
+        setupCollapsedRowSub.text = getString(if (setupExpanded) R.string.tap_collapse else R.string.tap_review)
 
         setupDoneSummary.visibility = if (!allOk && doneCount > 0) View.VISIBLE else View.GONE
-        setupDoneSummary.text = "✓ $doneCount of 3 setup steps ready"
+        setupDoneSummary.text = "✓ ${getString(R.string.setup_steps_ready, doneCount)}"
 
         fun rowVisibility(ok: Boolean) =
             if (!ok || (allOk && setupExpanded)) View.VISIBLE else View.GONE
@@ -563,11 +563,11 @@ class MainActivity : AppCompatActivity() {
         voiceCommandsDetailContainer.visibility = if (voiceCommandsEnabled) View.VISIBLE else View.GONE
         triggerPhraseRowSub.text = "\"${prefs().getString("command_trigger_phrase", "Whisper Command")}\""
 
-        keyRowSub.text = if (hasGroqKey) "Saved securely" else "Tap to set"
+        keyRowSub.text = if (hasGroqKey) getString(R.string.saved_securely) else getString(R.string.tap_to_set)
 
         val customInstructions = prefs().getString("custom_instructions", "") ?: ""
         customInstructionsRowSub.text = if (customInstructions.isBlank())
-            "Tap to add extra refinements"
+            getString(R.string.tap_add_refinements)
         else
             customInstructions.replace("\n", " ")
 
@@ -583,7 +583,7 @@ class MainActivity : AppCompatActivity() {
         val postReady = !usePostProcessing || hasCleanupKey
         val ready = audio && acc && (localReady || cloudReady) && postReady
 
-        statusSubtitle.text = if (ready) "Ready — tap the overlay dot to dictate" else getString(R.string.setup_required)
+        statusSubtitle.text = if (ready) getString(R.string.ready_dictate) else getString(R.string.setup_required)
         statusSubtitle.setTextColor(if (ready) attrColor(androidx.appcompat.R.attr.colorPrimary) else attrColor(android.R.attr.textColorSecondary))
 
         refreshAllCards()
@@ -598,15 +598,9 @@ class MainActivity : AppCompatActivity() {
      * doesn't work. */
     private fun showRestrictedSettingsHelp() {
         android.app.AlertDialog.Builder(this)
-            .setTitle("One extra step on Android 13+")
-            .setMessage(
-                "Android blocks this permission by default for apps installed outside the Play Store -- that's normal, not a bug.\n\n" +
-                "If the Accessibility toggle looks greyed out or won't switch on:\n" +
-                "1. Long-press the OpenWispr icon -> App info\n" +
-                "2. Tap the \u22ee menu (top right) -> \"Allow restricted settings\"\n" +
-                "3. Come back and enable Accessibility as usual"
-            )
-            .setPositiveButton("Open Accessibility settings") { _, _ ->
+            .setTitle(R.string.restricted_settings_title)
+            .setMessage(R.string.restricted_settings_help)
+            .setPositiveButton(R.string.open_accessibility_settings) { _, _ ->
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             }
             .setNegativeButton(getString(R.string.cancel), null)
@@ -621,7 +615,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestBatteryExemption() {
-        if (isIgnoringBatteryOptimizations()) { toast("Already unrestricted"); return }
+        if (isIgnoringBatteryOptimizations()) { toast(getString(R.string.already_unrestricted)); return }
         try {
             startActivity(
                 Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
@@ -635,7 +629,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
             } catch (e2: Exception) {
-                toast("Couldn't open battery settings: ${e2.message}")
+                toast(getString(R.string.battery_settings_failed, e2.message ?: ""))
             }
         }
     }
@@ -657,7 +651,7 @@ class MainActivity : AppCompatActivity() {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 if (info != null) {
                     android.app.AlertDialog.Builder(this)
-                        .setTitle("Update available")
+                        .setTitle(R.string.update_available)
                         .setMessage(
                             buildString {
                                 append("OpenWispr ${info.version} is available. You're on $currentVersion.")
@@ -671,7 +665,7 @@ class MainActivity : AppCompatActivity() {
                         .setNegativeButton(getString(R.string.later), null)
                         .show()
                 } else if (force) {
-                    toast("You're up to date (v$currentVersion)")
+                    toast(getString(R.string.up_to_date, currentVersion))
                 }
             }
         }
@@ -697,9 +691,9 @@ class MainActivity : AppCompatActivity() {
 
         if (android.os.Build.VERSION.SDK_INT >= 26 && !packageManager.canRequestPackageInstalls()) {
             android.app.AlertDialog.Builder(this)
-                .setTitle("Allow installing updates")
-                .setMessage("To install updates in-app, allow OpenWispr to install unknown apps on the next screen, then come back and tap Update again.")
-                .setPositiveButton("Continue") { _, _ ->
+                .setTitle(R.string.allow_update_install)
+                .setMessage(R.string.update_install_help)
+                .setPositiveButton(R.string.continue_action) { _, _ ->
                     try {
                         startActivity(
                             Intent(
@@ -716,12 +710,12 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        toast("Downloading update…")
+        toast(getString(R.string.downloading_update))
         UpdateChecker.downloadApk(this, apkUrl) { file, error ->
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 if (file == null) {
-                    toast("Download failed: ${error ?: "unknown error"}")
+                    toast(getString(R.string.download_failed, error ?: "unknown error"))
                     return@runOnUiThread
                 }
                 installApk(file)
@@ -738,7 +732,7 @@ class MainActivity : AppCompatActivity() {
         try {
             startActivity(intent)
         } catch (e: Exception) {
-            toast("Couldn't start installer: ${e.message}")
+            toast(getString(R.string.installer_failed, e.message ?: ""))
         }
     }
 
@@ -750,32 +744,23 @@ class MainActivity : AppCompatActivity() {
         if (!accessibilityEnabled || unrestricted || batteryWarningShown) return
         batteryWarningShown = true
         android.app.AlertDialog.Builder(this)
-            .setTitle("Keep dictation running")
-            .setMessage(
-                "Android's battery saver can shut down OpenWispr's background " +
-                "service to save power, which makes the mic overlay disappear until " +
-                "you reopen the app.\n\n" +
-                "Allow it to run unrestricted so it stays available.\n\n" +
-                "On some phones (Samsung, Xiaomi, OnePlus, and others) you may also " +
-                "need to allow \"autostart\" or remove OpenWispr from any " +
-                "battery/app-sleep manager in your phone's own settings, separately " +
-                "from the Android dialog this opens."
-            )
-            .setPositiveButton("Disable restrictions") { _, _ -> requestBatteryExemption() }
+            .setTitle(R.string.keep_dictation_running)
+            .setMessage(R.string.battery_warning_message)
+            .setPositiveButton(R.string.disable_restrictions) { _, _ -> requestBatteryExemption() }
             .setNegativeButton(getString(R.string.later), null)
             .show()
     }
 
     private fun promptDictionary() {
         val input = EditText(this).apply {
-            hint = "One word or phrase per line"
+            hint = getString(R.string.dictionary_hint)
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
             minLines = 6
             setText(Dictionary.load(prefs()).joinToString("\n"))
         }
         val dialog = android.app.AlertDialog.Builder(this)
             .setTitle(getString(R.string.custom_dictionary))
-            .setMessage("Saved on this device. Hotword boosting works with sherpa-onnx transducer models; cloud cleanup uses these as spelling references.")
+            .setMessage(R.string.dictionary_help)
             .setView(input)
             .setPositiveButton(getString(R.string.save)) { _, _ ->
                 Dictionary.save(prefs(), Dictionary.parse(input.text.toString()))
@@ -798,7 +783,7 @@ class MainActivity : AppCompatActivity() {
             setPadding(0, 0, 0, dp(8))
         }
         val input = EditText(this).apply {
-            hint = "gsk_..."
+            hint = getString(R.string.api_key_placeholder)
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             isSaveEnabled = false
             importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
@@ -809,7 +794,7 @@ class MainActivity : AppCompatActivity() {
             addView(input)
         }
         android.app.AlertDialog.Builder(this)
-            .setTitle("Groq API Key")
+                        .setTitle(R.string.api_key_title)
             .setView(container)
             .setPositiveButton(getString(R.string.save)) { _, _ ->
                 SecureKeyStorage.saveGroqApiKey(this, input.text.toString().trim())
