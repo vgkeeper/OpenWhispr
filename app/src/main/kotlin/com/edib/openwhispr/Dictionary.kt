@@ -12,6 +12,7 @@ object Dictionary {
         .map { it.trim() }
         .filter { it.isNotEmpty() }
         .distinctBy { it.lowercase() }
+        .toList()
 
     /** Adds exactly the selected phrase, preserving punctuation such as commas. */
     fun withSelectedText(words: List<String>, selectedText: String?): List<String> {

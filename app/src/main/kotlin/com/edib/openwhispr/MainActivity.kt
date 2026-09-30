@@ -335,7 +335,7 @@ class MainActivity : AppCompatActivity() {
         bubbleSizePanel.addView(bubbleSizeSlider)
 
         val rangeCaption = TextView(this).apply {
-            text = getString(R.string.bubble_size_help)
+            text = getString(R.string.bubble_size_help, BubbleSize.MIN_PERCENT, BubbleSize.MAX_PERCENT, BubbleSize.DEFAULT_PERCENT)
             textSize = 12f
             setTextColor(attrColor(android.R.attr.textColorSecondary))
             labelFor = bubbleSizeSlider.id
