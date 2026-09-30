@@ -17,7 +17,7 @@
     <string name="tab_settings">Paramètres</string>
     <string name="checking">Vérification…</string>
     <string name="audio_permission">Autorisation audio</string>
-    <string name="accessibility_service">Service d’accessibilité</string>
+    <string name="accessibility_service">Service de dictée OpenWispr</string>
     <string name="battery_optimization">Optimisation de la batterie</string>
     <string name="background_service">Service en arrière-plan</string>
     <string name="background_service_summary">Mettre en pause le micro flottant sans désactiver l’accessibilité</string>
@@ -50,14 +50,14 @@
     <string name="setup">Configuration</string><string name="engine">Moteur</string><string name="accessibility_help">Permet de détecter le champ de texte actif et d’y insérer le texte corrigé.</string>
     <string name="cleanup_provider">Fournisseur de correction</string><string name="add_custom_instructions">Ajouter des consignes personnalisées</string><string name="tap_add_refinements">Touchez pour ajouter des consignes</string>
     <string name="trigger_phrase">Phrase de déclenchement</string><string name="tap_to_change">Touchez pour modifier</string><string name="see_what_you_can_say">Voir les exemples de commandes</string>
-    <string name="add_dictionary_words">Ajouter des mots à la transcription</string><string name="word_count">%1$d mots</string><string name="groq_api_key">Clé API Groq</string><string name="tap_to_set">Touchez pour configurer</string>
+    <string name="add_dictionary_words">Ajouter des mots à la transcription</string><string name="groq_api_key">Clé API Groq</string><string name="tap_to_set">Touchez pour configurer</string>
     <string name="floating_bubble">Bulle de dictée flottante</string><string name="github">GitHub</string><string name="view_source_releases">Voir le code source et les versions</string>
-    <string name="download_progress">Téléchargement : %1$d %%</string><string name="error_message">Erreur : %1$s</string><string name="tap_collapse">Touchez pour réduire</string><string name="tap_review">Touchez pour vérifier</string>
-    <string name="setup_steps_ready">%1$d étapes de configuration sur 3 terminées</string><string name="saved_securely">Enregistrée de façon sécurisée</string><string name="ready_dictate">Prêt — touchez le point flottant pour dicter</string>
+    <string name="download_progress">Téléchargement : %1$d %%</string><string name="error_message">Échec du téléchargement. Veuillez réessayer.</string><string name="tap_collapse">Touchez pour réduire</string><string name="tap_review">Touchez pour vérifier</string>
+    <string name="saved_securely">Enregistrée de façon sécurisée</string><string name="ready_dictate">Prêt — touchez le point flottant pour dicter</string>
     <string name="restricted_settings_title">Une étape supplémentaire sur Android 13 ou version ultérieure</string><string name="open_accessibility_settings">Ouvrir les paramètres d’accessibilité</string><string name="already_unrestricted">Aucune restriction de batterie</string>
     <string name="update_available">Mise à jour disponible</string><string name="up_to_date">Vous utilisez la dernière version (v%1$s)</string><string name="allow_update_install">Autoriser les mises à jour</string>
     <string name="update_install_help">Pour installer les mises à jour depuis l’application, autorisez OpenWispr à installer des applications inconnues sur l’écran suivant, puis revenez et touchez de nouveau Mettre à jour.</string><string name="continue_action">Continuer</string>
-    <string name="downloading_update">Téléchargement de la mise à jour…</string><string name="download_failed">Échec du téléchargement : %1$s</string><string name="installer_failed">Impossible de lancer l’installation : %1$s</string>
+    <string name="downloading_update">Téléchargement de la mise à jour…</string><string name="download_failed">Échec du téléchargement de la mise à jour. Veuillez réessayer.</string><string name="installer_failed">Impossible de lancer l’installation. Essayez d’ouvrir manuellement le fichier APK téléchargé.</string>
     <string name="keep_dictation_running">Maintenir la dictée active</string><string name="dictionary_hint">Un mot ou une expression par ligne</string>
     <string name="dictionary_help">Enregistré sur cet appareil. Le renforcement des mots-clés fonctionne avec les modèles sherpa-onnx transducer ; la correction cloud utilise ces mots comme références orthographiques.</string>
     <string name="api_key_hint">Clé API (stockée de façon chiffrée)</string><string name="cleanup_provider_help">Choisissez l’API de chat utilisée uniquement pour corriger la transcription. La reconnaissance vocale cloud reste assurée par Groq Whisper Large V3 Turbo.</string>
@@ -66,7 +66,7 @@
     <string name="trigger_phrase_help">Prononcez cette phrase au début d’un enregistrement pour activer le mode commande au lieu de la dictée normale.</string>
     <string name="restricted_settings_help">Android bloque par défaut cette autorisation pour les applications installées hors du Play Store — c’est normal.\n\nSi l’option Accessibilité est grisée ou ne s’active pas :\n1. Faites un appui long sur l’icône OpenWispr → Infos sur l’application\n2. Touchez le menu ⋮ en haut à droite → « Autoriser les paramètres restreints »\n3. Revenez ensuite activer l’accessibilité</string>
     <string name="update_available_message">OpenWispr %1$s est disponible. Votre version actuelle est %2$s.%3$s</string><string name="whats_new">\n\nNouveautés :\n</string>
-    <string name="open_browser_failed">Impossible d’ouvrir le navigateur : %1$s</string><string name="open_settings_failed">Impossible d’ouvrir les paramètres : %1$s</string><string name="battery_settings_failed">Impossible d’ouvrir les paramètres de batterie : %1$s</string>
+    <string name="open_browser_failed">Impossible d’ouvrir un navigateur sur cet appareil.</string><string name="open_settings_failed">Impossible d’ouvrir les paramètres système sur cet appareil.</string><string name="battery_settings_failed">Impossible d’ouvrir les paramètres de batterie sur cet appareil.</string>
     <string name="battery_warning_message">L’économiseur de batterie d’Android peut arrêter le service OpenWispr en arrière-plan, ce qui fait disparaître le micro flottant jusqu’à la réouverture de l’application.\n\nAutorisez son fonctionnement sans restriction pour qu’il reste disponible.\n\nSur certains téléphones (Samsung, Xiaomi, OnePlus et autres), vous devrez peut-être aussi autoriser le démarrage automatique ou retirer OpenWispr du gestionnaire d’économie de batterie propre au fabricant, en plus de la boîte de dialogue Android.</string>
     <string name="disable_restrictions">Désactiver les restrictions</string><string name="api_key_help_html">Pas encore de clé ? Obtenez-en une gratuitement sur &lt;a href="https://console.groq.com/keys"&gt;console.groq.com/keys&lt;/a&gt;</string>
     <string name="api_key_placeholder">gsk_...</string><string name="openrouter_url_placeholder">https://openrouter.ai/api/v1</string>
@@ -77,8 +77,21 @@
     <string name="provider_groq_openai">Groq | Compatible OpenAI (OpenRouter, DeepSeek, etc.)</string>
     <string name="choose_cleanup_provider">Choisissez l’API de chat utilisée uniquement pour corriger la transcription. La reconnaissance vocale cloud reste assurée par Groq Whisper Large V3 Turbo.</string>
     <string name="command_mode_help">Prononcez cette phrase au début d’un enregistrement pour activer le mode commande au lieu de la dictée normale.</string>
-    <string name="grant_audio_in_app">Accordez l’autorisation audio dans l’application OpenWispr</string><string name="audio_permission_denied">Autorisation audio refusée</string><string name="local_error">Erreur locale : %1$s</string>
-    <string name="transcription_error">Erreur : %1$s</string><string name="no_speech">Aucune parole détectée</string><string name="cleanup_needs_key">La correction nécessite une clé API. Le texte brut sera utilisé.</string>
+    <string name="grant_audio_in_app">Accordez l’autorisation audio dans l’application OpenWispr</string><string name="audio_permission_denied">Autorisation audio refusée</string><string name="local_error">Échec de la transcription sur l’appareil. Veuillez réessayer.</string>
+    <string name="transcription_error">Échec de la transcription. Veuillez réessayer.</string><string name="no_speech">Aucune parole détectée</string><string name="cleanup_needs_key">La correction nécessite une clé API. Le texte brut sera utilisé.</string>
     <string name="voice_commands_need_key">Les commandes vocales nécessitent une clé API Groq</string><string name="no_command_after_trigger">Aucune commande détectée après la phrase de déclenchement</string>
-    <string name="command_failed">Échec de la commande : %1$s</string><string name="command_not_recognized">Commande non reconnue — essayez résumer, traduire, ton ou liste</string>
+    <string name="command_failed">Échec de la commande vocale. Veuillez réessayer.</string><string name="command_not_recognized">Commande non reconnue — essayez résumer, traduire, ton ou liste</string>
+    <string name="bubble_size_help">De 90 % (minimum) à 150 % (maximum) ; la taille standard est de 100 %. La modification est immédiate.</string><string name="model_ready">%1$s est prêt !</string><string name="model_size">%1$s · %2$d Mo</string><string name="quoted_phrase">« %1$s »</string><string name="groq_chat_api">API de chat Groq</string>
+    <string name="command_examples_body">Prononcez la phrase de déclenchement, puis l’une de ces commandes. Elle s’applique au texte déjà présent dans le champ ou au texte dicté juste après :\n\n• « %1$s, résume en deux phrases »\n• « %1$s, améliore la fluidité »\n• « %1$s, traduis en italien »\n• « %1$s, rends ce texte plus formel »\n• « %1$s, transforme ce texte en liste »\n\nVous pouvez enchaîner plusieurs commandes : « %1$s, traduis en italien puis transforme en liste » les applique dans cet ordre.</string><string name="got_it">Compris</string>
+    <string name="cleanup_key_saved">Clé API enregistrée de façon sécurisée</string><string name="cleanup_key_needed">Clé API requise</string><string name="unknown_error">erreur inconnue</string><string name="empty_transcript">transcription vide</string><string name="empty_response">réponse vide</string>
+    <string name="best_value">★★★ Meilleur rapport qualité-prix</string><string name="best_quality">★★★★ Meilleure qualité</string><string name="fast_model">★★☆ Rapide</string>
+    <string name="command_applied">Commande exécutée</string><string name="replace_failed_clipboard">Impossible de remplacer le champ — texte copié dans le presse-papiers</string><string name="copied_to_clipboard">Copié dans le presse-papiers</string><string name="cleanup_failed_clipboard">Échec de la correction — texte brut copié dans le presse-papiers</string>
+    <string name="voice_commands_summary">Dictez une phrase de déclenchement pour traduire, résumer et plus encore</string><string name="bubble_size_accessibility">Taille de la bulle de dictée flottante</string>
+    <string name="bubble_standard">standard</string><string name="bubble_smaller">plus petite</string><string name="bubble_larger">plus grande</string><string name="bubble_standard_accessibility">taille standard</string><string name="bubble_smaller_accessibility">plus petite que la taille standard</string><string name="bubble_larger_accessibility">plus grande que la taille standard</string>
+    <string name="battery_unrestricted">Sans restriction — ne sera pas arrêtée pour économiser la batterie</string><string name="battery_allow_background">Touchez pour autoriser l’activité en arrière-plan (recommandé)</string>
+    <string name="provider_summary">%1$s · %2$s</string>
+    <string name="overlay_content_description">Bulle de dictée OpenWispr</string><string name="no_audio_captured">Aucun son enregistré</string><string name="set_groq_key_in_app">Configurez une clé API Groq dans l’application OpenWispr</string>
+    <string name="groq_provider">Groq</string>
+    <string name="percent_unit">pour cent</string>
+    <string name="fgs_special_use_subtype">Maintient la bulle de dictée et l’insertion de texte disponibles en arrière-plan.</string>
 </resources>

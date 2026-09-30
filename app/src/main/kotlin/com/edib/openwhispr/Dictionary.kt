@@ -8,10 +8,17 @@ object Dictionary {
     const val PREF_KEY = "dictionary_words"
 
     fun parse(raw: String?): List<String> = raw.orEmpty()
-        .split('\n', ',', ';')
+        .lineSequence()
         .map { it.trim() }
         .filter { it.isNotEmpty() }
         .distinctBy { it.lowercase() }
+
+    /** Adds exactly the selected phrase, preserving punctuation such as commas. */
+    fun withSelectedText(words: List<String>, selectedText: String?): List<String> {
+        val selected = selectedText.orEmpty().trim()
+        return if (selected.isBlank()) parse(words.joinToString("\n"))
+        else parse((words + selected).joinToString("\n"))
+    }
 
     fun save(preferences: SharedPreferences, words: List<String>) {
         preferences.edit().putString(PREF_KEY, parse(words.joinToString("\n")).joinToString("\n")).apply()

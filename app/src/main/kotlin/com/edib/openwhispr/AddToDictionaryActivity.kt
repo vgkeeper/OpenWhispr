@@ -27,7 +27,8 @@ class AddToDictionaryActivity : Activity() {
         }
         val preferences = getSharedPreferences("openwhispr", MODE_PRIVATE)
         val words = Dictionary.load(preferences)
-        Dictionary.save(preferences, words + selected)
+        Dictionary.save(preferences, Dictionary.withSelectedText(words, selected))
+        WhisperAccessibilityService.instance?.reloadModel()
         Toast.makeText(this, R.string.dictionary_added, Toast.LENGTH_SHORT).show()
         finish()
     }

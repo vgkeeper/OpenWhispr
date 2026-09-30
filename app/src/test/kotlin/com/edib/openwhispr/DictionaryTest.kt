@@ -5,8 +5,19 @@ import org.junit.Test
 import java.io.File
 
 class DictionaryTest {
-    @Test fun parsesAndDeduplicatesWordsIgnoringCase() {
-        assertEquals(listOf("OpenAI", "sherpa-onnx"), Dictionary.parse(" OpenAI, openai\nsherpa-onnx; "))
+    @Test fun parsesNewlineSeparatedWordsAndDeduplicatesIgnoringCase() {
+        assertEquals(listOf("OpenAI", "sherpa-onnx;"), Dictionary.parse(" OpenAI\nopenai\nsherpa-onnx; "))
+    }
+
+    @Test fun selectedTextIsAddedAsOnePunctuatedPhrase() {
+        assertEquals(
+            listOf("OpenWispr", "New York, NY"),
+            Dictionary.withSelectedText(listOf("OpenWispr"), "  New York, NY  ")
+        )
+    }
+
+    @Test fun selectedTextDuplicateIsNotAddedAgain() {
+        assertEquals(listOf("OpenWispr"), Dictionary.withSelectedText(listOf("OpenWispr"), "openwispr"))
     }
 
     @Test fun writesSherpaHotwordFile() {

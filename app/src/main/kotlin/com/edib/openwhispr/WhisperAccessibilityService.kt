@@ -400,7 +400,7 @@ class WhisperAccessibilityService : AccessibilityService() {
         val overlay = BubbleOverlay(this).apply {
             addView(ring, FrameLayout.LayoutParams(ringSize, ringSize, Gravity.CENTER))
             addView(img, FrameLayout.LayoutParams(buttonSize, buttonSize, Gravity.CENTER))
-            contentDescription = "OpenWhispr dictation bubble"
+            contentDescription = getString(R.string.overlay_content_description)
             setOnClickListener { onTap() }
             alpha = 0f
             visibility = View.INVISIBLE
@@ -665,7 +665,7 @@ class WhisperAccessibilityService : AccessibilityService() {
         val pcm = pcmStream?.toByteArray() ?: ByteArray(0)
         pcmStream = null
 
-        if (pcm.isEmpty()) { reset("No audio captured"); return }
+        if (pcm.isEmpty()) { reset(getString(R.string.no_audio_captured)); return }
 
         val useLocal = prefs().getBoolean("use_local", true)
         val local = localTranscriber
@@ -697,7 +697,7 @@ class WhisperAccessibilityService : AccessibilityService() {
             } catch (e: Exception) {
                 Log.e(TAG, "Local transcription failed", e)
                 handler.post {
-                    toast(getString(R.string.local_error, e.message ?: ""))
+                    toast(getString(R.string.local_error))
                     goIdle()
                 }
             }
@@ -707,14 +707,14 @@ class WhisperAccessibilityService : AccessibilityService() {
     private fun transcribeApi(pcm: ByteArray) {
         val wav = WavWriter.encode(pcm)
         val apiKey = SecureKeyStorage.groqApiKey(this)
-        if (apiKey.isBlank()) { reset("Set Groq API key in OpenWispr app"); return }
+        if (apiKey.isBlank()) { reset(getString(R.string.set_groq_key_in_app)); return }
 
         TranscriberClient.transcribe(wav, apiKey) { result ->
             if (result.text != null && result.text.isNotBlank()) {
                 handleTranscriptionResult(result.text)
             } else {
                 handler.post {
-                    toast(getString(R.string.transcription_error, result.error ?: "empty transcript"))
+                    toast(getString(R.string.transcription_error))
                     goIdle()
                 }
             }
@@ -774,7 +774,7 @@ class WhisperAccessibilityService : AccessibilityService() {
                     } else if (!cleaned.isNullOrBlank()) {
                         injectText(cleaned)
                     } else {
-                        injectText(text, feedback = "Cleanup failed — raw copied to clipboard", feedbackDurationMs = 3000)
+                        injectText(text, feedback = getString(R.string.cleanup_failed_clipboard), feedbackDurationMs = 3000)
                     }
                     goIdle()
                 }
@@ -815,7 +815,7 @@ class WhisperAccessibilityService : AccessibilityService() {
                 val out = result.text?.trim()
                 when {
                     out.isNullOrBlank() ->
-                        toast(getString(R.string.command_failed, result.error ?: "empty response"))
+                        toast(getString(R.string.command_failed))
                     out == CommandProcessor.UNSUPPORTED ->
                         toast(getString(R.string.command_not_recognized))
                     else -> replaceFieldText(out)
@@ -859,7 +859,7 @@ class WhisperAccessibilityService : AccessibilityService() {
 
         Log.i(TAG, if (replaced) "Command replace succeeded" else "Command replace failed; clipboard fallback only")
         showFeedback(
-            if (replaced) "Command applied" else "Couldn't replace field -- copied to clipboard",
+            getString(if (replaced) R.string.command_applied else R.string.replace_failed_clipboard),
             if (replaced) 2000 else 3000
         )
     }
@@ -897,7 +897,7 @@ class WhisperAccessibilityService : AccessibilityService() {
 
     private fun injectText(
         text: String,
-        feedback: String? = "Copied to clipboard",
+        feedback: String? = getString(R.string.copied_to_clipboard),
         feedbackDurationMs: Long = 2000
     ) {
         val clip = ClipData.newPlainText("openwhispr", text)

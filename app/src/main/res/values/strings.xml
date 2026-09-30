@@ -17,7 +17,7 @@
     <string name="tab_settings">Settings</string>
     <string name="checking">Checking...</string>
     <string name="audio_permission">Audio permission</string>
-    <string name="accessibility_service">Accessibility service</string>
+    <string name="accessibility_service">OpenWispr dictation service</string>
     <string name="battery_optimization">Battery optimization</string>
     <string name="background_service">Background service</string>
     <string name="background_service_summary">Pause the mic overlay without disabling accessibility</string>
@@ -50,14 +50,14 @@
     <string name="setup">Setup</string><string name="engine">Engine</string><string name="accessibility_help">Needed to detect the focused text field and insert the cleaned-up text there.</string>
     <string name="cleanup_provider">Cleanup provider</string><string name="add_custom_instructions">Add custom instructions</string><string name="tap_add_refinements">Tap to add extra refinements</string>
     <string name="trigger_phrase">Trigger phrase</string><string name="tap_to_change">Tap to change</string><string name="see_what_you_can_say">See what you can say</string>
-    <string name="add_dictionary_words">Add words used in transcription</string><string name="word_count">%1$d words</string><string name="groq_api_key">Groq API Key</string><string name="tap_to_set">Tap to set</string>
+    <string name="add_dictionary_words">Add words used in transcription</string><string name="groq_api_key">Groq API Key</string><string name="tap_to_set">Tap to set</string>
     <string name="floating_bubble">Floating dictation bubble</string><string name="github">GitHub</string><string name="view_source_releases">View source &amp; releases</string>
-    <string name="download_progress">Downloading: %1$d%%</string><string name="error_message">Error: %1$s</string><string name="tap_collapse">Tap to collapse</string><string name="tap_review">Tap to review</string>
-    <string name="setup_steps_ready">%1$d of 3 setup steps ready</string><string name="saved_securely">Saved securely</string><string name="ready_dictate">Ready — tap the overlay dot to dictate</string>
+    <string name="download_progress">Downloading: %1$d%%</string><string name="error_message">Download failed. Please try again.</string><string name="tap_collapse">Tap to collapse</string><string name="tap_review">Tap to review</string>
+    <string name="saved_securely">Saved securely</string><string name="ready_dictate">Ready — tap the overlay dot to dictate</string>
     <string name="restricted_settings_title">One extra step on Android 13+</string><string name="open_accessibility_settings">Open Accessibility settings</string><string name="already_unrestricted">Already unrestricted</string>
     <string name="update_available">Update available</string><string name="up_to_date">You’re up to date (v%1$s)</string><string name="allow_update_install">Allow installing updates</string>
     <string name="update_install_help">To install updates in-app, allow OpenWispr to install unknown apps on the next screen, then come back and tap Update again.</string><string name="continue_action">Continue</string>
-    <string name="downloading_update">Downloading update…</string><string name="download_failed">Download failed: %1$s</string><string name="installer_failed">Couldn’t start installer: %1$s</string>
+    <string name="downloading_update">Downloading update…</string><string name="download_failed">Update download failed. Please try again.</string><string name="installer_failed">Couldn’t start the installer. Try opening the downloaded APK manually.</string>
     <string name="keep_dictation_running">Keep dictation running</string><string name="dictionary_hint">One word or phrase per line</string>
     <string name="dictionary_help">Saved on this device. Hotword boosting works with sherpa-onnx transducer models; cloud cleanup uses these as spelling references.</string>
     <string name="api_key_hint">API key (stored encrypted)</string><string name="cleanup_provider_help">Choose the chat API used only for transcript cleanup. Cloud speech transcription remains on Groq Whisper Large V3 Turbo.</string>
@@ -66,7 +66,7 @@
     <string name="trigger_phrase_help">Say this phrase at the start of a recording to switch into command mode instead of normal dictation.</string>
     <string name="restricted_settings_help">Android blocks this permission by default for apps installed outside the Play Store — that’s normal, not a bug.\n\nIf the Accessibility toggle looks greyed out or won’t switch on:\n1. Long-press the OpenWispr icon → App info\n2. Tap the ⋮ menu (top right) → “Allow restricted settings”\n3. Come back and enable Accessibility as usual</string>
     <string name="update_available_message">OpenWispr %1$s is available. You’re on %2$s.%3$s</string><string name="whats_new">\n\nWhat’s new:\n</string>
-    <string name="open_browser_failed">Couldn’t open browser: %1$s</string><string name="open_settings_failed">Couldn’t open settings: %1$s</string><string name="battery_settings_failed">Couldn’t open battery settings: %1$s</string>
+    <string name="open_browser_failed">Couldn’t open a browser on this device.</string><string name="open_settings_failed">Couldn’t open system settings on this device.</string><string name="battery_settings_failed">Couldn’t open battery settings on this device.</string>
     <string name="battery_warning_message">Android’s battery saver can shut down OpenWispr’s background service to save power, which makes the mic overlay disappear until you reopen the app.\n\nAllow it to run unrestricted so it stays available.\n\nOn some phones (Samsung, Xiaomi, OnePlus, and others) you may also need to allow “autostart” or remove OpenWispr from any battery/app-sleep manager in your phone’s own settings, separately from the Android dialog this opens.</string>
     <string name="disable_restrictions">Disable restrictions</string><string name="api_key_help_html">Don’t have one? Get a free key at &lt;a href="https://console.groq.com/keys"&gt;console.groq.com/keys&lt;/a&gt;</string>
     <string name="api_key_placeholder">gsk_...</string><string name="openrouter_url_placeholder">https://openrouter.ai/api/v1</string>
@@ -77,8 +77,21 @@
     <string name="provider_groq_openai">Groq | OpenAI-compatible (OpenRouter, DeepSeek, etc.)</string>
     <string name="choose_cleanup_provider">Choose the chat API used only for transcript cleanup. Cloud speech transcription remains on Groq Whisper Large V3 Turbo.</string>
     <string name="command_mode_help">Say this phrase at the start of a recording to switch into command mode instead of normal dictation.</string>
-    <string name="grant_audio_in_app">Grant audio permission in OpenWispr app</string><string name="audio_permission_denied">Audio permission denied</string><string name="local_error">Local error: %1$s</string>
-    <string name="transcription_error">Error: %1$s</string><string name="no_speech">No speech detected</string><string name="cleanup_needs_key">Cleanup needs an API key. Using raw text.</string>
+    <string name="grant_audio_in_app">Grant audio permission in OpenWispr app</string><string name="audio_permission_denied">Audio permission denied</string><string name="local_error">On-device transcription failed. Please try again.</string>
+    <string name="transcription_error">Transcription failed. Please try again.</string><string name="no_speech">No speech detected</string><string name="cleanup_needs_key">Cleanup needs an API key. Using raw text.</string>
     <string name="voice_commands_need_key">Voice commands need a Groq API key</string><string name="no_command_after_trigger">No command heard after the trigger phrase</string>
-    <string name="command_failed">Command failed: %1$s</string><string name="command_not_recognized">Command not recognized — try summarize, translate, tone, or list</string>
+    <string name="command_failed">The voice command failed. Please try again.</string><string name="command_not_recognized">Command not recognized — try summarize, translate, tone, or list</string>
+    <string name="bubble_size_help">90% (smallest) to 150% (largest); 100% is standard. Changes apply immediately.</string><string name="model_ready">%1$s ready!</string><string name="model_size">%1$s · %2$d MB</string><string name="quoted_phrase">“%1$s”</string><string name="groq_chat_api">Groq Chat API</string>
+    <string name="command_examples_body">Say the trigger phrase, then one of these — applies to whatever’s already in the field, or to text you dictate right after the command:\n\n• “%1$s, summarize this in two sentences”\n• “%1$s, enhance the flow”\n• “%1$s, translate to Italian”\n• “%1$s, make this more formal”\n• “%1$s, turn this into a list”\n\nYou can chain commands: “%1$s, translate to Italian and turn it into a list” applies them in order.</string><string name="got_it">Got it</string>
+    <string name="cleanup_key_saved">API key saved securely</string><string name="cleanup_key_needed">API key needed</string><string name="unknown_error">unknown error</string><string name="empty_transcript">empty transcript</string><string name="empty_response">empty response</string>
+    <string name="best_value">★★★ Best value</string><string name="best_quality">★★★★ Best quality</string><string name="fast_model">★★☆ Fast</string>
+    <string name="command_applied">Command applied</string><string name="replace_failed_clipboard">Couldn’t replace field — copied to clipboard</string><string name="copied_to_clipboard">Copied to clipboard</string><string name="cleanup_failed_clipboard">Cleanup failed — raw copied to clipboard</string>
+    <string name="voice_commands_summary">Say a trigger phrase to translate, summarize, and more</string><string name="bubble_size_accessibility">Floating dictation bubble size</string>
+    <string name="bubble_standard">standard</string><string name="bubble_smaller">smaller</string><string name="bubble_larger">larger</string><string name="bubble_standard_accessibility">standard size</string><string name="bubble_smaller_accessibility">smaller than standard</string><string name="bubble_larger_accessibility">larger than standard</string>
+    <string name="battery_unrestricted">Unrestricted — won’t be shut down to save battery</string><string name="battery_allow_background">Tap to allow background activity (recommended)</string>
+    <string name="provider_summary">%1$s · %2$s</string>
+    <string name="overlay_content_description">OpenWispr dictation bubble</string><string name="no_audio_captured">No audio captured</string><string name="set_groq_key_in_app">Set Groq API key in OpenWispr app</string>
+    <string name="groq_provider">Groq</string>
+    <string name="percent_unit">percent</string>
+    <string name="fgs_special_use_subtype">Keeps the dictation overlay and text insertion service available in the background.</string>
 </resources>
