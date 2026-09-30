@@ -9,4 +9,11 @@
     <string name="process_text_label">Ajouter au dictionnaire OpenWhispr</string>
     <string name="dictionary_no_text">Aucun texte sélectionné à ajouter</string>
     <string name="dictionary_added">Ajouté au dictionnaire</string>
+    <string name="dictionary_title">Dictionnaire personnalisé</string>
+    <string name="dictionary_summary">Ajouter des mots utilisés pendant la transcription</string>
+    <string name="dictionary_word_count">%1$d mots</string>
+    <string name="dictionary_input_hint">Un mot ou une expression par ligne</string>
+    <string name="dictionary_saved_local_message">Enregistré sur cet appareil. Le renforcement des mots-clés fonctionne avec les modèles transducteurs sherpa-onnx ; le post-traitement cloud utilise ces entrées comme références orthographiques.</string>
+    <string name="save">Enregistrer</string>
+    <string name="cancel">Annuler</string>
 </resources>

@@ -9,4 +9,11 @@
     <string name="process_text_label">Add to OpenWhispr dictionary</string>
     <string name="dictionary_no_text">No selected text to add</string>
     <string name="dictionary_added">Added to dictionary</string>
+    <string name="dictionary_title">Custom dictionary</string>
+    <string name="dictionary_summary">Add words used in transcription</string>
+    <string name="dictionary_word_count">%1$d words</string>
+    <string name="dictionary_input_hint">One word or phrase per line</string>
+    <string name="dictionary_saved_local_message">Saved on this device. Hotword boosting works with sherpa-onnx transducer models; cloud cleanup uses these as spelling references.</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>

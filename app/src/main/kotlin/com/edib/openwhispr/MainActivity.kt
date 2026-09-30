@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         // Best-effort: lets the background service show its "still running"
         // notification (Android 13+ requires this permission for any
         // notification, including the foreground-service one). Not gated on
@@ -270,7 +269,13 @@ class MainActivity : AppCompatActivity() {
         // ================= Settings tab =================
 
         settingsContainer.addView(sectionHeader("Settings"))
-        settingsContainer.addView(settingsRow("Custom dictionary", Dictionary.load(prefs()).let { if (it.isEmpty()) "Add words used in transcription" else "${it.size} words" }) { promptDictionary() })
+        settingsContainer.addView(settingsRow(
+            getString(R.string.dictionary_title),
+            Dictionary.load(prefs()).let {
+                if (it.isEmpty()) getString(R.string.dictionary_summary)
+                else getString(R.string.dictionary_word_count, it.size)
+            },
+        ) { promptDictionary() })
 
         val keyRow = settingsRow("Groq API Key", "Tap to set") { promptApiKey() }
         keyRowSub = keyRow.findViewWithTag("subtitle")
@@ -687,21 +692,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun promptDictionary() {
         val input = EditText(this).apply {
-            hint = "One word or phrase per line"
+            hint = getString(R.string.dictionary_input_hint)
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
             minLines = 6
             setText(Dictionary.load(prefs()).joinToString("\n"))
         }
         val dialog = android.app.AlertDialog.Builder(this)
-            .setTitle("Custom dictionary")
-            .setMessage("Saved on this device. Hotword boosting works with sherpa-onnx transducer models; cloud cleanup uses these as spelling references.")
+            .setTitle(R.string.dictionary_title)
+            .setMessage(R.string.dictionary_saved_local_message)
             .setView(input)
-            .setPositiveButton("Save") { _, _ ->
+            .setPositiveButton(R.string.save) { _, _ ->
                 Dictionary.save(prefs(), Dictionary.parse(input.text.toString()))
                 WhisperAccessibilityService.instance?.reloadModel()
                 toast(getString(R.string.dictionary_added))
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel, null)
             .create()
         dialog.show()
     }
