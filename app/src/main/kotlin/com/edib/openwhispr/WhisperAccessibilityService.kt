@@ -68,6 +68,13 @@ class WhisperAccessibilityService : AccessibilityService() {
 
     private enum class State { IDLE, RECORDING, TRANSCRIBING }
 
+    private class BubbleOverlay(context: Context) : FrameLayout(context) {
+        override fun performClick(): Boolean {
+            super.performClick()
+            return true
+        }
+    }
+
     private var state = State.IDLE
     private var overlayView: FrameLayout? = null
     private var overlayShown = false
@@ -390,7 +397,7 @@ class WhisperAccessibilityService : AccessibilityService() {
             background = circle(COLOR_IDLE)
         }
 
-        val overlay = FrameLayout(this).apply {
+        val overlay = BubbleOverlay(this).apply {
             addView(ring, FrameLayout.LayoutParams(ringSize, ringSize, Gravity.CENTER))
             addView(img, FrameLayout.LayoutParams(buttonSize, buttonSize, Gravity.CENTER))
             contentDescription = "OpenWhispr dictation bubble"
