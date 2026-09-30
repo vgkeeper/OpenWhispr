@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.slider.Slider
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.google.android.material.tabs.TabLayout
 import java.io.File
@@ -282,6 +283,59 @@ class MainActivity : AppCompatActivity() {
         val keyRow = settingsRow("Groq API Key", "Tap to set") { promptApiKey() }
         keyRowSub = keyRow.findViewWithTag("subtitle")
         settingsContainer.addView(keyRow)
+
+        settingsContainer.addView(sectionHeader("Floating dictation bubble"))
+        val bubbleSizePanel = vertical(dp(24), dp(8))
+        val bubbleSizeLabel = TextView(this).apply {
+            text = "Bubble size"
+            textSize = 18f
+            setTextColor(attrColor(android.R.attr.textColorPrimary))
+        }
+        bubbleSizePanel.addView(bubbleSizeLabel)
+
+        val selectedBubbleSize = TextView(this).apply {
+            textSize = 14f
+            setTextColor(attrColor(android.R.attr.textColorSecondary))
+            setPadding(0, dp(2), 0, dp(4))
+            accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
+        }
+        bubbleSizePanel.addView(selectedBubbleSize)
+
+        bubbleSizeLabel.id = View.generateViewId()
+        val bubbleSizeSlider = Slider(this).apply {
+            id = View.generateViewId()
+            valueFrom = BubbleSize.MIN_PERCENT.toFloat()
+            valueTo = BubbleSize.MAX_PERCENT.toFloat()
+            stepSize = BubbleSize.STEP_PERCENT.toFloat()
+            value = currentBubbleSizePercent().toFloat()
+            setLabelFormatter { BubbleSize.valueLabel(it.toInt()) }
+            contentDescription = "Floating dictation bubble size"
+            layoutParams = LinearLayout.LayoutParams(LP_MATCH, dp(64))
+        }
+        bubbleSizeLabel.labelFor = bubbleSizeSlider.id
+        bubbleSizeSlider.addOnChangeListener { slider, value, fromUser ->
+            if (fromUser) {
+                val percent = BubbleSize.sliderPercent(value.toInt())
+                prefs().edit().putInt(BubbleSize.PREFERENCE_KEY, percent).apply()
+                selectedBubbleSize.text = BubbleSize.valueLabel(percent)
+                slider.contentDescription =
+                    "Floating dictation bubble size, ${BubbleSize.accessibilityDescription(percent)}"
+                WhisperAccessibilityService.instance?.refreshBubbleSize()
+            }
+        }
+        val initialBubbleSize = currentBubbleSizePercent()
+        selectedBubbleSize.text = BubbleSize.valueLabel(initialBubbleSize)
+        bubbleSizeSlider.contentDescription = BubbleSize.accessibilityDescription(initialBubbleSize)
+        bubbleSizePanel.addView(bubbleSizeSlider)
+
+        val rangeCaption = TextView(this).apply {
+            text = "90% (smallest) to 150% (largest); 100% is standard. Changes apply immediately."
+            textSize = 12f
+            setTextColor(attrColor(android.R.attr.textColorSecondary))
+            labelFor = bubbleSizeSlider.id
+        }
+        bubbleSizePanel.addView(rangeCaption)
+        settingsContainer.addView(bubbleSizePanel)
 
         settingsContainer.addView(sectionHeader("About"))
 
@@ -995,6 +1049,15 @@ class MainActivity : AppCompatActivity() {
         }
         val endpoint = if (config.provider == CleanupProviderConfig.Provider.GROQ) "Groq" else config.model
         return "$endpoint · ${if (configured) "API key saved securely" else "API key needed"}"
+    }
+
+    private fun currentBubbleSizePercent(): Int {
+        val storedValue = try {
+            prefs().getInt(BubbleSize.PREFERENCE_KEY, BubbleSize.DEFAULT_PERCENT)
+        } catch (_: ClassCastException) {
+            null
+        }
+        return BubbleSize.preferencePercent(storedValue)
     }
 
     private fun prefs() = getSharedPreferences("openwhispr", MODE_PRIVATE)
