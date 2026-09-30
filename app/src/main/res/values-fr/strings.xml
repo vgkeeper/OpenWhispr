@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OpenWispr</string>
+    <string name="accessibility_description">Dictée : enregistre l’audio, le transcrit et insère le texte dans le champ actif.</string>
+    <string name="notification_channel_name">Service OpenWispr en arrière-plan</string>
+    <string name="notification_channel_description">Maintient la fenêtre de dictée active en arrière-plan</string>
+    <string name="notification_content_title">OpenWispr est en cours d’exécution</string>
+    <string name="notification_content_text">Touchez le micro flottant pour dicter</string>
+    <string name="bubble_size_section">Bulle de dictée flottante</string>
+    <string name="bubble_size">Taille de la bulle</string>
+    <string name="bubble_size_accessibility">Taille de la bulle de dictée flottante</string>
+    <string name="bubble_size_help">De %1$d %% (minimum) à %2$d %% (maximum) ; %3$d %% est la taille standard. La modification est immédiate.</string>
+    <string name="bubble_standard">standard</string>
+    <string name="bubble_smaller">plus petite</string>
+    <string name="bubble_larger">plus grande</string>
+    <string name="bubble_standard_accessibility">taille standard</string>
+    <string name="bubble_smaller_accessibility">plus petite que la taille standard</string>
+    <string name="bubble_larger_accessibility">plus grande que la taille standard</string>
+    <string name="percent_unit">pour cent</string>
+</resources>

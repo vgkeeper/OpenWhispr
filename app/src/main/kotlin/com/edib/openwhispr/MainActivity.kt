@@ -275,10 +275,10 @@ class MainActivity : AppCompatActivity() {
         keyRowSub = keyRow.findViewWithTag("subtitle")
         settingsContainer.addView(keyRow)
 
-        settingsContainer.addView(sectionHeader("Floating dictation bubble"))
+        settingsContainer.addView(sectionHeader(getString(R.string.bubble_size_section)))
         val bubbleSizePanel = vertical(dp(24), dp(8))
         val bubbleSizeLabel = TextView(this).apply {
-            text = "Bubble size"
+            text = getString(R.string.bubble_size)
             textSize = 18f
             setTextColor(attrColor(android.R.attr.textColorPrimary))
         }
@@ -299,8 +299,8 @@ class MainActivity : AppCompatActivity() {
             valueTo = BubbleSize.MAX_PERCENT.toFloat()
             stepSize = BubbleSize.STEP_PERCENT.toFloat()
             value = currentBubbleSizePercent().toFloat()
-            setLabelFormatter { BubbleSize.valueLabel(it.toInt()) }
-            contentDescription = "Floating dictation bubble size"
+            setLabelFormatter { localizedBubbleLabel(it.toInt()) }
+            contentDescription = getString(R.string.bubble_size_accessibility)
             layoutParams = LinearLayout.LayoutParams(LP_MATCH, dp(64))
         }
         bubbleSizeLabel.labelFor = bubbleSizeSlider.id
@@ -308,19 +308,23 @@ class MainActivity : AppCompatActivity() {
             if (fromUser) {
                 val percent = BubbleSize.sliderPercent(value.toInt())
                 prefs().edit().putInt(BubbleSize.PREFERENCE_KEY, percent).apply()
-                selectedBubbleSize.text = BubbleSize.valueLabel(percent)
-                slider.contentDescription =
-                    "Floating dictation bubble size, ${BubbleSize.accessibilityDescription(percent)}"
+                selectedBubbleSize.text = localizedBubbleLabel(percent)
+                slider.contentDescription = "${getString(R.string.bubble_size_accessibility)}, ${localizedBubbleDescription(percent)}"
                 WhisperAccessibilityService.instance?.refreshBubbleSize()
             }
         }
         val initialBubbleSize = currentBubbleSizePercent()
-        selectedBubbleSize.text = BubbleSize.valueLabel(initialBubbleSize)
-        bubbleSizeSlider.contentDescription = BubbleSize.accessibilityDescription(initialBubbleSize)
+        selectedBubbleSize.text = localizedBubbleLabel(initialBubbleSize)
+        bubbleSizeSlider.contentDescription = "${getString(R.string.bubble_size_accessibility)}, ${localizedBubbleDescription(initialBubbleSize)}"
         bubbleSizePanel.addView(bubbleSizeSlider)
 
         val rangeCaption = TextView(this).apply {
-            text = "90% (smallest) to 150% (largest); 100% is standard. Changes apply immediately."
+            text = getString(
+                R.string.bubble_size_help,
+                BubbleSize.MIN_PERCENT,
+                BubbleSize.MAX_PERCENT,
+                BubbleSize.DEFAULT_PERCENT,
+            )
             textSize = 12f
             setTextColor(attrColor(android.R.attr.textColorSecondary))
             labelFor = bubbleSizeSlider.id
@@ -919,6 +923,19 @@ class MainActivity : AppCompatActivity() {
         }
         return BubbleSize.preferencePercent(storedValue)
     }
+    private fun localizedBubbleLabel(percent: Int) = BubbleSize.valueLabel(
+        percent,
+        standard = getString(R.string.bubble_standard),
+        smaller = getString(R.string.bubble_smaller),
+        larger = getString(R.string.bubble_larger),
+    )
+    private fun localizedBubbleDescription(percent: Int) = BubbleSize.accessibilityDescription(
+        percent,
+        standard = getString(R.string.bubble_standard_accessibility),
+        smaller = getString(R.string.bubble_smaller_accessibility),
+        larger = getString(R.string.bubble_larger_accessibility),
+        percentUnit = getString(R.string.percent_unit),
+    )
     private fun prefs() = getSharedPreferences("openwhispr", MODE_PRIVATE)
     private fun toast(msg: String) = Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 
