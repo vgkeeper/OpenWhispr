@@ -10,10 +10,10 @@
     <string name="dictionary_no_text">No selected text to add</string>
     <string name="dictionary_added">Added to dictionary</string>
     <string name="dictionary_title">Custom dictionary</string>
-    <string name="dictionary_summary">Add words used in transcription</string>
+    <string name="dictionary_summary">Help recognize and write names, acronyms, and specialized terms during dictation and cleanup</string>
     <string name="dictionary_word_count">%1$d words</string>
-    <string name="dictionary_input_hint">One word or phrase per line</string>
-    <string name="dictionary_saved_local_message">Saved on this device. Hotword boosting works with sherpa-onnx transducer models; cloud cleanup uses these as spelling references.</string>
+    <string name="dictionary_input_hint">One entry per line. Example: OpenWhispr | open whisper, open wisper</string>
+    <string name="dictionary_saved_local_message">The dictionary helps recognize and write names, acronyms, and specialized terms during dictation and cleanup. The form before | is the final spelling; variants after | are pronunciation and recognition hints only. The dictionary stays active with custom instructions. Older one-term lines still work. Example: OpenWhispr | open whisper, open wisper.</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
 </resources>

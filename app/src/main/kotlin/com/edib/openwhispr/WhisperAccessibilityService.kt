@@ -640,7 +640,7 @@ class WhisperAccessibilityService : AccessibilityService() {
         val apiKey = prefs().getString("api_key", "") ?: ""
         if (apiKey.isBlank()) { reset("Set API key in OpenWispr app"); return }
 
-        TranscriberClient.transcribe(wav, apiKey) { result ->
+        TranscriberClient.transcribe(wav, apiKey, Dictionary.load(prefs())) { result ->
             if (result.text != null && result.text.isNotBlank()) {
                 handleTranscriptionResult(result.text)
             } else {
