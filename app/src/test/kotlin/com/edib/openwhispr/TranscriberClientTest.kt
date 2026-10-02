@@ -48,7 +48,7 @@ class TranscriberClientTest {
     }
 
     @Test fun `ASR prompt stays within conservative byte budget with unicode and large vocabulary`() {
-        val longVocabulary = (1..100).map { "ÉlémentDictionary$it".repeat(40) }
+        val longVocabulary = listOf("Élodie") + (1..100).map { "ÉlémentDictionary$it".repeat(40) }
         val prompt = TranscriberClient.dictionaryPrompt(longVocabulary)
 
         assertTrue(prompt.isNotEmpty())

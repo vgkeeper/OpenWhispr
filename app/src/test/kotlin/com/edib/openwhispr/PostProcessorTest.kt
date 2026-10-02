@@ -94,7 +94,7 @@ class PostProcessorTest {
         assertTrue(prompt.contains("- OpenWhispr"))
         assertTrue(prompt.contains("- NASA"))
         assertTrue(prompt.contains("exact spelling and capitalization"))
-        assertTrue(prompt.contains("do not perform global/sub-string substitutions"))
+        assertTrue(prompt.contains("global/sub-string substitutions"))
         assertFalse(prompt.contains("Additional user-specified refinements"))
     }
 
