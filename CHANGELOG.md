@@ -9,6 +9,11 @@ No internal/process notes (CI changes, release cleanup, repo housekeeping,
 etc.) -- if it wouldn't mean anything to someone who just installed the app,
 it doesn't belong here.
 
+## 3.12.0
+- Custom dictionary entries support recognition aliases for names, acronyms, and specialized terms.
+- Dictionary spelling guidance now applies during transcription and cleanup, including when custom instructions are set.
+- Fixed hotword support for compatible local transducer models.
+
 ## 3.11.0
 - Added clear attribution and separate source links for the VGKeeper-maintained Android fork and the original OpenWhispr project
 - Updated the in-app update check and APK downloads to use this fork's GitHub releases

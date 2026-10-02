@@ -709,7 +709,7 @@ class WhisperAccessibilityService : AccessibilityService() {
         val apiKey = SecureKeyStorage.groqApiKey(this)
         if (apiKey.isBlank()) { reset(getString(R.string.set_groq_key_in_app)); return }
 
-        TranscriberClient.transcribe(wav, apiKey) { result ->
+        TranscriberClient.transcribe(wav, apiKey, Dictionary.load(prefs())) { result ->
             if (result.text != null && result.text.isNotBlank()) {
                 handleTranscriptionResult(result.text)
             } else {

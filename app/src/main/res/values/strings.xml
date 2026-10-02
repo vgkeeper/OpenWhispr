@@ -57,8 +57,8 @@
     <string name="update_available">Update available</string><string name="up_to_date">You’re up to date (v%1$s)</string><string name="allow_update_install">Allow installing updates</string>
     <string name="update_install_help">To install updates in-app, allow OpenWispr to install unknown apps on the next screen, then come back and tap Update again.</string><string name="continue_action">Continue</string>
     <string name="downloading_update">Downloading update…</string><string name="download_failed">Update download failed. Please try again.</string><string name="installer_failed">Couldn’t start the installer. Try opening the downloaded APK manually.</string>
-    <string name="keep_dictation_running">Keep dictation running</string><string name="dictionary_hint">One word or phrase per line</string>
-    <string name="dictionary_help">Saved on this device. Hotword boosting works with sherpa-onnx transducer models; cloud cleanup uses these as spelling references.</string>
+    <string name="keep_dictation_running">Keep dictation running</string><string name="dictionary_hint">One canonical term per line. Add optional recognition aliases after |, separated by commas.</string>
+    <string name="dictionary_help">This dictionary helps OpenWispr recognize and spell names, acronyms, and specialized terms during dictation and cleanup. It stays active with custom instructions. Use Canonical | alias 1, alias 2; older one-term lines still work.</string>
     <string name="api_key_hint">API key (stored encrypted)</string><string name="cleanup_provider_help">After you dictate, OpenWispr corrects recognition mistakes, punctuation, and formatting. Groq is recommended.</string>
     <string name="invalid_cleanup_url">Invalid cleanup base URL</string><string name="cleanup_key_cleared">Cleanup API key cleared</string>
     <string name="custom_instructions_help">These are appended to OpenWispr’s built-in cleanup rules. They can’t override its safety, formatting, or self-correction behavior.</string>

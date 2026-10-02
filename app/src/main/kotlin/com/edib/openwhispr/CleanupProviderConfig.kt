@@ -75,7 +75,7 @@ internal fun cleanupRequest(
         })
         put(JSONObject().apply {
             put("role", "user")
-            put("content", text)
+            put("content", PostProcessor.transcriptInput(text))
         })
     }
     val bodyJson = JSONObject().apply {
