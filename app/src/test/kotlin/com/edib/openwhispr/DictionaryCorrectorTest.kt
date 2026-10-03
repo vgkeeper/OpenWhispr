@@ -75,6 +75,7 @@ class DictionaryCorrectorTest {
             "in fiscal year",
             "in fiscal policy",
             "in physical whatever context follows",
+            "in physical use",
             "We met in physical therapy yesterday.",
             "It could be in physical space for now.",
             "The physical therapy office closes at five.",

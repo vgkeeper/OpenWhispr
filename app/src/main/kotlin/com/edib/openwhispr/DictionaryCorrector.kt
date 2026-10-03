@@ -312,6 +312,7 @@ object DictionaryCorrector {
     private val safeFuzzyFollowers = setOf(
         "settings", "configuration", "account", "accounts", "project", "projects",
         "workspace", "workspaces", "console", "dashboard", "service", "services",
+        "use", "uses", "used", "using",
     )
 
     private fun isCommonCollocation(tokens: List<Token>, start: Int, count: Int): Boolean {
@@ -324,7 +325,7 @@ object DictionaryCorrector {
         "physical" to setOf(
             "therapy", "therapist", "therapists", "exam", "exams", "examination", "education",
             "condition", "conditions", "activity", "activities", "conditioning", "contact", "health", "fitness",
-            "pain", "danger", "terms", "form", "shape", "space", "world", "environment", "reality",
+            "pain", "danger", "terms", "form", "shape", "space", "world", "environment", "reality", "use",
         ),
         "fiscal" to setOf("year", "years", "policy", "policies", "budget", "quarter", "quarters"),
     )
