@@ -60,6 +60,12 @@ class DictionaryCorrectorTest {
         val phrases = listOf(
             "physical",
             "in physical therapy",
+            "in physical condition",
+            "in physical activity",
+            "in physical activities",
+            "in physical conditioning",
+            "in physical pain",
+            "in physical danger",
             "physical exam",
             "in fiscal year",
             "in fiscal policy",

@@ -306,7 +306,11 @@ object DictionaryCorrector {
     }
 
     private val commonCollocationFollowers = mapOf(
-        "physical" to setOf("therapy", "therapist", "therapists", "exam", "exams", "examination", "education"),
+        "physical" to setOf(
+            "therapy", "therapist", "therapists", "exam", "exams", "examination", "education",
+            "condition", "conditions", "activity", "activities", "conditioning", "contact", "health", "fitness",
+            "pain", "danger", "terms", "form", "shape",
+        ),
         "fiscal" to setOf("year", "years", "policy", "policies", "budget", "quarter", "quarters"),
     )
 
