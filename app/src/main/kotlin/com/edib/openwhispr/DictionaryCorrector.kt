@@ -208,6 +208,7 @@ object DictionaryCorrector {
             val first = tokens[startToken]
             val last = tokens[startToken + tokenCount - 1]
             if (!hasSafeBoundaries(text, first.start, last.end) ||
+                !hasSafeFuzzyContext(text, tokens, startToken, tokenCount) ||
                 isCommonCollocation(tokens, startToken, tokenCount)
             ) continue
             val phonetic = phoneticKey(termKey)
@@ -298,6 +299,20 @@ object DictionaryCorrector {
         while (last > first && text[last - 1].isWhitespace()) last--
         return if (first == last || last - first > MAX_TERM_LENGTH) null else text.substring(first, last)
     }
+
+    /** Require a closed phrase, clause boundary, or small set of clear app/domain contexts. */
+    private fun hasSafeFuzzyContext(text: String, tokens: List<Token>, start: Int, count: Int): Boolean {
+        val last = tokens[start + count - 1]
+        val next = tokens.getOrNull(start + count) ?: return true
+        val separator = text.substring(last.end, next.start)
+        if (separator.any { it in ".,;:!?" }) return true
+        return next.normalized in safeFuzzyFollowers
+    }
+
+    private val safeFuzzyFollowers = setOf(
+        "settings", "configuration", "account", "accounts", "project", "projects",
+        "workspace", "workspaces", "console", "dashboard", "service", "services",
+    )
 
     private fun isCommonCollocation(tokens: List<Token>, start: Int, count: Int): Boolean {
         val finalWord = tokens[start + count - 1].normalized

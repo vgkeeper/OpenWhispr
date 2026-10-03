@@ -11,6 +11,7 @@ class DictionaryCorrectorTest {
 
         assertEquals("Infisical", DictionaryCorrector.correct("in physical", dictionary))
         assertEquals("Infisical", DictionaryCorrector.correct("in fiscal", dictionary))
+        assertEquals("Infisical", DictionaryCorrector.correct("infysical", dictionary))
     }
 
     @Test
@@ -73,6 +74,9 @@ class DictionaryCorrectorTest {
             "physical exam",
             "in fiscal year",
             "in fiscal policy",
+            "in physical whatever context follows",
+            "We met in physical therapy yesterday.",
+            "It could be in physical space for now.",
             "The physical therapy office closes at five.",
             "The fiscal year starts in July.",
             "We discussed unrelated topics.",
