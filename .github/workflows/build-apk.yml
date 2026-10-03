@@ -2,7 +2,7 @@ name: Build APK
 
 on:
   push:
-    branches: [main, feat/cleanup-openai-compatible, feat/dictionary-asr-context]
+    branches: [main, feat/cleanup-openai-compatible, feat/dictionary-asr-context, feat/dictionary-fuzzy-correction]
   workflow_dispatch: {}
 
 permissions:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    if: ${{ github.repository == 'vgkeeper/OpenWhispr' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/cleanup-openai-compatible' || github.ref == 'refs/heads/feat/dictionary-asr-context'))) }}
+    if: ${{ github.repository == 'vgkeeper/OpenWhispr' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/cleanup-openai-compatible' || github.ref == 'refs/heads/feat/dictionary-asr-context' || github.ref == 'refs/heads/feat/dictionary-fuzzy-correction'))) }}
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}

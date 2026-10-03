@@ -99,6 +99,24 @@ class PostProcessorTest {
     }
 
     @Test
+    fun locallyCorrectedTranscriptKeepsDictionaryAndCustomCleanupPromptLayers() {
+        val dictionary = listOf("Infisical")
+        val corrected = DictionaryCorrector.correct("in physical settings", dictionary)
+        val customInstructions = "Keep the wording concise."
+        val prompt = PostProcessor.effectivePrompt(customInstructions, dictionary)
+        val request = cleanupRequest(corrected, prompt, "test-key", CleanupProviderConfig())
+        val body = org.json.JSONObject(okio.Buffer().also { request.body!!.writeTo(it) }.readUtf8())
+        val messages = body.getJSONArray("messages")
+        val system = messages.getJSONObject(0).getString("content")
+        val user = messages.getJSONObject(1).getString("content")
+
+        assertEquals("Infisical settings", corrected)
+        assertTrue(system.contains("- Infisical"))
+        assertTrue(system.contains(org.json.JSONObject.quote(customInstructions)))
+        assertTrue(user.endsWith(org.json.JSONObject.quote(corrected)))
+    }
+
+    @Test
     fun dictionaryCustomRefinementAndPhoneticTranscriptKeepAllLayersInOrderAndSeparated() {
         val transcript = "Please open open wisper settings"
         val custom = "Keep the sentence casual."
