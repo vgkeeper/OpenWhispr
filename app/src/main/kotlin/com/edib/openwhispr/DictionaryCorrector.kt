@@ -309,7 +309,7 @@ object DictionaryCorrector {
         "physical" to setOf(
             "therapy", "therapist", "therapists", "exam", "exams", "examination", "education",
             "condition", "conditions", "activity", "activities", "conditioning", "contact", "health", "fitness",
-            "pain", "danger", "terms", "form", "shape",
+            "pain", "danger", "terms", "form", "shape", "space", "world", "environment", "reality",
         ),
         "fiscal" to setOf("year", "years", "policy", "policies", "budget", "quarter", "quarters"),
     )
