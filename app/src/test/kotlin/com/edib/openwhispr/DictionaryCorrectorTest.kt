@@ -14,6 +14,20 @@ class DictionaryCorrectorTest {
     }
 
     @Test
+    fun fuzzyMatchingAbstainsWhenDistinctCanonicalTermsTie() {
+        val transcript = "in physical"
+
+        assertEquals(
+            transcript,
+            DictionaryCorrector.correct(transcript, listOf("Infisical", "Infisikal")),
+        )
+        assertEquals(
+            transcript,
+            DictionaryCorrector.correct(transcript, listOf("Infisikal", "Infisical")),
+        )
+    }
+
+    @Test
     fun exactCanonicalIsNoOpAndCaseVariantsRestoreCanonicalSpelling() {
         val dictionary = listOf("Infisical")
 

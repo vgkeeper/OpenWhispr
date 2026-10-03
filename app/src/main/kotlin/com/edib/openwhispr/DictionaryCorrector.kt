@@ -32,7 +32,6 @@ object DictionaryCorrector {
     private data class Candidate(
         val canonical: String,
         val phonetic: String,
-        val order: Int,
     )
 
     private data class Index(
@@ -123,12 +122,12 @@ object DictionaryCorrector {
         var aliasCount = 0
         var aliasesVisited = 0
 
-        source.asSequence().take(MAX_ENTRIES).forEachIndexed { order, line ->
-            if (line.length > MAX_TERM_LENGTH * 8) return@forEachIndexed
+        source.asSequence().take(MAX_ENTRIES).forEach { line ->
+            if (line.length > MAX_TERM_LENGTH * 8) return@forEach
             val separator = line.indexOf('|')
             val canonicalEnd = if (separator < 0) line.length else separator
-            val canonical = trimmedTerm(line, 0, canonicalEnd) ?: return@forEachIndexed
-            val canonicalKey = termKey(canonical) ?: return@forEachIndexed
+            val canonical = trimmedTerm(line, 0, canonicalEnd) ?: return@forEach
+            val canonicalKey = termKey(canonical) ?: return@forEach
             val existingCanonical = canonicalByKey[canonicalKey]
             val canonicalSpelling = existingCanonical ?: canonical
             if (existingCanonical == null) canonicalByKey[canonicalKey] = canonical
@@ -138,7 +137,7 @@ object DictionaryCorrector {
                 val phonetic = phoneticKey(canonicalKey)
                 if (phonetic.length >= 7) {
                     candidates.getOrPut(prefix(phonetic)) { ArrayList() }
-                        .add(Candidate(canonicalSpelling, phonetic, order))
+                        .add(Candidate(canonicalSpelling, phonetic))
                     candidateCount++
                 }
             }
@@ -215,6 +214,7 @@ object DictionaryCorrector {
             val candidates = index.candidatesByPrefix[prefix(phonetic)] ?: continue
             var best: Candidate? = null
             var bestDistance = Int.MAX_VALUE
+            var ambiguousBest = false
             for (candidate in candidates) {
                 val distance = when {
                     candidate.phonetic.length < 7 || phonetic.length < 7 -> -1
@@ -222,11 +222,16 @@ object DictionaryCorrector {
                     else -> editDistanceAtMostOne(candidate.phonetic, phonetic)
                 }
                 if (distance < 0) continue
-                if (distance < bestDistance || (distance == bestDistance && candidate.order < (best?.order ?: Int.MAX_VALUE))) {
-                    best = candidate
-                    bestDistance = distance
+                when {
+                    distance < bestDistance -> {
+                        best = candidate
+                        bestDistance = distance
+                        ambiguousBest = false
+                    }
+                    distance == bestDistance && candidate.canonical != best?.canonical -> ambiguousBest = true
                 }
             }
+            if (ambiguousBest) return null
             if (best != null) return (startToken + tokenCount - 1) to best.canonical
         }
         return null
