@@ -9,6 +9,10 @@ No internal/process notes (CI changes, release cleanup, repo housekeeping,
 etc.) -- if it wouldn't mean anything to someone who just installed the app,
 it doesn't belong here.
 
+## 3.13.0
+- Dictionary entries now automatically correct high-confidence recognition variations during dictation.
+- Dictionary correction works with or without text cleanup and preserves the spelling you add.
+
 ## 3.12.0
 - Custom dictionary entries support recognition aliases for names, acronyms, and specialized terms.
 - Dictionary spelling guidance now applies during transcription and cleanup, including when custom instructions are set.

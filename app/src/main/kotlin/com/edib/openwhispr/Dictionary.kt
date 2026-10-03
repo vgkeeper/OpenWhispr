@@ -50,10 +50,16 @@ object Dictionary {
     }
 
     fun save(preferences: SharedPreferences, words: List<String>) {
-        preferences.edit().putString(PREF_KEY, parse(words.joinToString("\n")).joinToString("\n")).apply()
+        val parsed = parse(words.joinToString("\n"))
+        preferences.edit().putString(PREF_KEY, parsed.joinToString("\n")).apply()
+        DictionaryCorrector.prepare(parsed)
     }
 
-    fun load(preferences: SharedPreferences): List<String> = parse(preferences.getString(PREF_KEY, null))
+    fun load(preferences: SharedPreferences): List<String> {
+        val words = parse(preferences.getString(PREF_KEY, null))
+        DictionaryCorrector.prepare(words)
+        return words
+    }
 
     /** sherpa-onnx hotword format is one canonical term or alias per line. */
     fun writeHotwords(file: File, words: List<String>): String {

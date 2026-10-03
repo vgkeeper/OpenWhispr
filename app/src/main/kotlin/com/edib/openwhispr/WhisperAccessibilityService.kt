@@ -741,6 +741,8 @@ class WhisperAccessibilityService : AccessibilityService() {
             }
         }
 
+        val vocabulary = Dictionary.load(prefs())
+        val correctedText = DictionaryCorrector.correct(text, vocabulary)
         val usePostProcessing = prefs().getBoolean("use_post_processing", false)
         val cleanupConfig = CleanupProviderConfig.fromPreferences(
             prefs().getString("cleanup_provider", null),
@@ -754,17 +756,16 @@ class WhisperAccessibilityService : AccessibilityService() {
             if (apiKey.isBlank()) {
                 handler.post {
                     toast(getString(R.string.cleanup_needs_key))
-                    injectText(text)
+                    injectText(correctedText)
                     goIdle()
                 }
                 return
             }
 
             val customInstructions = prefs().getString("custom_instructions", "") ?: ""
-            val vocabulary = Dictionary.load(prefs())
             val prompt = PostProcessor.effectivePrompt(customInstructions, vocabulary)
 
-            PostProcessor.process(text, prompt, apiKey, cleanupConfig) { result ->
+            PostProcessor.process(correctedText, prompt, apiKey, cleanupConfig) { result ->
                 handler.post {
                     val cleaned = result.text?.trim()
                     if (cleaned == "EMPTY") {
@@ -774,14 +775,14 @@ class WhisperAccessibilityService : AccessibilityService() {
                     } else if (!cleaned.isNullOrBlank()) {
                         injectText(cleaned)
                     } else {
-                        injectText(text, feedback = getString(R.string.cleanup_failed_clipboard), feedbackDurationMs = 3000)
+                        injectText(correctedText, feedback = getString(R.string.cleanup_failed_clipboard), feedbackDurationMs = 3000)
                     }
                     goIdle()
                 }
             }
         } else {
             handler.post {
-                injectText(text)
+                injectText(correctedText)
                 goIdle()
             }
         }
